@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity implements MainActiviryMVP.V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new MainActiviryPresenter();
+        presenter = new MainActivityPresenter();
     }
 
     @Override
