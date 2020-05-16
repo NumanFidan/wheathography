@@ -1,4 +1,17 @@
-package com.simplertutorials.android.wheathograophy;
+package com.simplertutorials.android.wheathograophy.ui;
+
+import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment;
+
+import androidx.fragment.app.Fragment;
 
 public class MainActivityPresenter implements MainActiviryMVP.Presenter {
+
+    private CityListFragment cityListFragment;
+
+    @Override
+    public void attachFragment(Fragment fragment) {
+        if (fragment instanceof CityListFragment){
+            this.cityListFragment = (CityListFragment) fragment;
+        }
+    }
 }
