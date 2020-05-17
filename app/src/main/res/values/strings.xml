@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">wheathograophy</string>
+    <string name="add_city">Add City</string>
+    <string name="type_to_add_city">Type to add city</string>
 </resources>

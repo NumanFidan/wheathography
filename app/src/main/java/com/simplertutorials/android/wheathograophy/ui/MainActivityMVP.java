@@ -5,7 +5,7 @@ import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 
-public interface MainActiviryMVP {
+public interface MainActivityMVP {
     interface View{
         Context getContext();
         void changeFragment(int containerId, Fragment fragment);
