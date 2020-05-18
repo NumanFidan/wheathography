@@ -36,8 +36,6 @@ class AddCityFragment: Fragment() {
     }
 
     private fun updateUi(view: View) {
-
-
         view.addcity_btn.setOnClickListener {
             val cityName = cityadd_text.text.toString()
             _presenter.saveCity(cityName)
