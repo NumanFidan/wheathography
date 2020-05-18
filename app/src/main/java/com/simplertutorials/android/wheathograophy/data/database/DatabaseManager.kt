@@ -2,8 +2,8 @@ package com.simplertutorials.android.wheathograophy.data.database
 
 import android.content.SharedPreferences
 
-class DatabaseModule(private val editor: SharedPreferences.Editor, private val settings: SharedPreferences) {
-
+class DatabaseManager(private val editor: SharedPreferences.Editor,
+                      private val settings: SharedPreferences) {
 
     fun writeSet(hashSet: HashSet<String>, key: String) {
         if (settings.contains(key)) {
@@ -19,6 +19,9 @@ class DatabaseModule(private val editor: SharedPreferences.Editor, private val s
     }
 
     fun readSet(key: String): MutableSet<String>? {
-        return settings.getStringSet(key,null)
+        return if (settings.contains(key))
+            settings.getStringSet(key,null)
+        else
+            null
     }
 }

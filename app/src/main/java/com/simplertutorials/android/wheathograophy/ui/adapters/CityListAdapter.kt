@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.simplertutorials.android.wheathograophy.R
+import com.simplertutorials.android.wheathograophy.domain.City
 import kotlinx.android.synthetic.main.city_list_recyclerv_row.view.*
 
-class CityListAdapter(private val cityListData: ArrayList<String>)
+class CityListAdapter(private val cityListData: ArrayList<City>)
     : RecyclerView.Adapter<CityListAdapter.CityListHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup,
@@ -24,7 +25,7 @@ class CityListAdapter(private val cityListData: ArrayList<String>)
     }
 
     override fun onBindViewHolder(holder: CityListHolder, position: Int) {
-        holder.view.row_cityname.text = cityListData[position]
+        holder.view.row_cityname.text = cityListData[position].name
     }
 
 

@@ -4,17 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.simplertutorials.android.wheathograophy.BuildConfig;
 import com.simplertutorials.android.wheathograophy.MainApplication;
 import com.simplertutorials.android.wheathograophy.R;
 import com.simplertutorials.android.wheathograophy.data.api.ApiService;
@@ -29,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityMVP.V
 
     @Inject
     ApiService apiService;
+    @Inject
+    DatabaseRepository databaseRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
