@@ -3,21 +3,20 @@ package com.simplertutorials.android.wheathograophy.ui.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository2
+import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
+import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject
@@ -35,17 +34,16 @@ class CityListFragment : Fragment(), OnCityClickListener {
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
     private lateinit var presenter: CityListPresenter
-    private lateinit var databaseRepository: DatabaseRepository2
+    private lateinit var databaseRepository: DatabaseRepository
     private lateinit var apiRepository: ApiRepository
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val settings = context?.getSharedPreferences(KEY, 0)
-        databaseRepository = DatabaseRepository2.getInstance(settings, KEY)
-        presenter = CityListPresenter(databaseRepository, this)
+        databaseRepository = DatabaseRepository.getInstance(settings, KEY)
+        presenter = CityListPresenter(databaseRepository)
+
         cityList = ArrayList<City>()
         presenter.getCurrentCityList(cityList)
 
@@ -61,9 +59,9 @@ class CityListFragment : Fragment(), OnCityClickListener {
     }
 
     private fun updateUi(view: View) {
-        view.add_city_btn.setOnClickListener(View.OnClickListener {
+        view.add_city_btn.setOnClickListener {
             activity.changeFragment(R.id.content_main, AddCityFragment())
-        })
+        }
         setUpRecyclerView(view)
         setUpSwipeToRefresh(view)
     }
@@ -83,12 +81,13 @@ class CityListFragment : Fragment(), OnCityClickListener {
         recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository, apiService )
         view.city_list.apply {
             setHasFixedSize(true)
-            setAdapter(recylclerViewAdapter)
+            adapter = recylclerViewAdapter
             this.layoutManager = layoutManager
         }
     }
 
-    fun cityListRefresh() {
+    private fun cityListRefresh() {
+        //get up to date list and notify the adapter about changes
         presenter.getCurrentCityList(cityList)
         recylclerViewAdapter.notifyDataSetChanged()
     }
@@ -99,6 +98,8 @@ class CityListFragment : Fragment(), OnCityClickListener {
     }
 
     override fun onCityClicked(city: City) {
+        //Open the Info screen of the clicked City
+        //Pass the argument to the fragment
         val fragment = WeatherInfoFragment()
         val args = Bundle()
         args.putParcelable(ARG_CITY_PARAM, city)

@@ -7,24 +7,24 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DatabaseRepository2 {
-    private static DatabaseRepository2 instance;
+public class DatabaseRepository {
+    private static DatabaseRepository instance;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private DatabaseManager manager;
     private String KEY;
 
     @SuppressLint("CommitPrefEdits")
-    private DatabaseRepository2(SharedPreferences settings, String key) {
+    private DatabaseRepository(SharedPreferences settings, String key) {
         this.settings = settings;
         this.editor = settings.edit();
         this.manager = new DatabaseManager(editor,settings);
         this.KEY = key;
     }
 
-    public static DatabaseRepository2 getInstance(SharedPreferences settings, String key) {
+    public static DatabaseRepository getInstance(SharedPreferences settings, String key) {
         if (instance == null)
-            instance = new DatabaseRepository2(settings, key);
+            instance = new DatabaseRepository(settings, key);
         return instance;
     }
 

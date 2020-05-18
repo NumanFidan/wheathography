@@ -1,15 +1,15 @@
 package com.simplertutorials.android.wheathograophy.ui.fragments
 
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository2
+import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
 import com.simplertutorials.android.wheathograophy.domain.City
 
-class CityListPresenter(private val databaseRepository: DatabaseRepository2,
-                        private val view: CityListFragment) {
+class CityListPresenter(private val databaseRepository: DatabaseRepository) {
 
 
     fun getCurrentCityList(cityList: ArrayList<City>) {
+        //get the up to date list from database
         cityList.clear()
-        cityList.addAll(databaseRepository.getCityList())
+        cityList.addAll(databaseRepository.cityList)
     }
 
     fun deleteCity(city: City) {

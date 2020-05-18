@@ -9,16 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository2
+import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import kotlinx.android.synthetic.main.city_add_fragment.*
 import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
 class AddCityFragment: Fragment() {
 
-    private lateinit var _recyclerView: RecyclerView
     private lateinit var _presenter: AddCityFragmentPresenter
-    private lateinit var databaseRepositoryCities:DatabaseRepository2
+    private lateinit var databaseRepositoryCities: DatabaseRepository
     private lateinit var activity: MainActivity
     private var KEY:String = "Cities"
 
@@ -26,7 +25,7 @@ class AddCityFragment: Fragment() {
         super.onCreate(savedInstanceState)
 
         val settings = context?.getSharedPreferences(KEY, 0)
-        databaseRepositoryCities = DatabaseRepository2.getInstance(settings, KEY)
+        databaseRepositoryCities = DatabaseRepository.getInstance(settings, KEY)
         _presenter = AddCityFragmentPresenter(databaseRepositoryCities, this)
     }
 
@@ -37,14 +36,16 @@ class AddCityFragment: Fragment() {
     }
 
     private fun updateUi(view: View) {
-        view.addcity_btn.setOnClickListener(View.OnClickListener {
-            _presenter.saveCity(cityadd_text.text.toString())
-            view.cityadd_text.text.clear()
-        })
 
-        view.cancel_btn.setOnClickListener(View.OnClickListener {
+
+        view.addcity_btn.setOnClickListener {
+            val cityName = cityadd_text.text.toString()
+            _presenter.saveCity(cityName)
+        }
+
+        view.cancel_btn.setOnClickListener {
             activity.changeFragment(R.id.content_main, CityListFragment())
-        })
+        }
     }
 
     override fun onAttach(context: Context) {

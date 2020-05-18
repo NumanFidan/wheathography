@@ -14,7 +14,8 @@ class WeatherInfoPresenter(private val view: WeatherInfoFragment,
 
     @SuppressLint("CheckResult")
     fun fetchCityWeather(currentCity: City, view: View) {
-        var weather:Weather = Weather()
+        //fetch the weather from the API and update the fields
+        var weather = Weather()
         apiRepository.getWeatherInfo(apiService,currentCity)
                 .subscribe (
                         { n -> weather = Weather(String.format("%.2f",n.informationCube!!.temp - 273.15),

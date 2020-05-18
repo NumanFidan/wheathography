@@ -22,35 +22,29 @@ import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragm
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainActivityMVP.View {
+public class MainActivity extends AppCompatActivity {
 
-    public MainActivityMVP.Presenter presenter;
-
-    @Inject
-    ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ((MainApplication) getApplicationContext()).getComponent().inject(this);
-        presenter = new MainActivityPresenter();
-
-        changeFragment(R.id.content_main, new CityListFragment());
+        loadFragment();
     }
 
-    @Override
+    private void loadFragment() {
+        //If this is the first time app start, load cityListFragment
+        //if onCreate called for another reason(orientation change) keep current Fragment
+
+        if (getSupportFragmentManager().findFragmentById(R.id.content_main) == null)
+            changeFragment(R.id.content_main, new CityListFragment());
+
+    }
+
     public void changeFragment(int containerId, Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(containerId, fragment);
         ft.commit();
-        presenter.attachFragment(fragment);
-    }
-
-    @Override
-    public Context getContext() {
-        return getApplicationContext();
     }
 
     @Override

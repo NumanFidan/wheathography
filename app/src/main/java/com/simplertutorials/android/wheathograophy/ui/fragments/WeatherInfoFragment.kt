@@ -1,5 +1,6 @@
 package com.simplertutorials.android.wheathograophy.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -27,8 +28,9 @@ class WeatherInfoFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            currentCity = arguments!!.getParcelable<City>(ARG_CITY_PARAM)!!
+            currentCity = arguments!!.getParcelable(ARG_CITY_PARAM)!!
         }
+
         (activity.applicationContext as MainApplication).component.inject(this)
         _presenter = WeatherInfoPresenter(this, apiService)
     }
@@ -40,7 +42,8 @@ class WeatherInfoFragment : Fragment() {
     }
 
     private fun updateUi(view: View) {
-       _presenter.fetchCityWeather(currentCity,view)
+        //fetch the weather Info from API and update UI
+        _presenter.fetchCityWeather(currentCity, view)
     }
 
     override fun onAttach(context: Context) {
@@ -48,10 +51,11 @@ class WeatherInfoFragment : Fragment() {
         activity = context as MainActivity
     }
 
+    @SuppressLint("SetTextI18n")
     fun updateFields(currentCity: City, view: View) {
         view.city_name.text = currentCity.name
         view.humidity.text = currentCity.weather.humidity
-        view.temprature.text = currentCity.weather.currentTemp
+        view.temprature.text = currentCity.weather.currentTemp + "°C"
         view.description.text = currentCity.weather.description
     }
 
@@ -60,11 +64,11 @@ class WeatherInfoFragment : Fragment() {
         alertDialog.setMessage(e?.message)
         alertDialog.setTitle(getString(R.string.we_face_with_an_error))
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok)
-        ) { dialogInterface, i -> alertDialog.dismiss(); activity.changeFragment(R.id.content_main, CityListFragment()) }
+        ) { _, _ ->
+            alertDialog.dismiss()
+            activity.changeFragment(R.id.content_main, CityListFragment())
+        }
         alertDialog.show()
     }
-
-
-
 
 }

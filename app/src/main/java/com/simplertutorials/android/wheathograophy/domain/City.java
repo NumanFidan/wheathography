@@ -34,6 +34,7 @@ public class City implements Parcelable {
 
     @Override
     public boolean equals(@Nullable Object obj) {
+        //To compare two city use name
         if (!(obj instanceof City))
             return false;
         return this.name.equalsIgnoreCase(((City) obj).name);
