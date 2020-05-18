@@ -8,44 +8,56 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository2
+import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import kotlinx.android.synthetic.main.city_add_fragment.*
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
 class AddCityFragment: Fragment() {
 
-//    @Inject
-//    lateinit var databaseRepository: DatabaseRepository
     private lateinit var _recyclerView: RecyclerView
     private lateinit var _presenter: AddCityFragmentPresenter
-
+    private lateinit var databaseRepositoryCities:DatabaseRepository2
+    private lateinit var activity: MainActivity
+    private var KEY:String = "Cities"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        _presenter = AddCityFragmentPresenter(databaseRepository, this)
+        val settings = context?.getSharedPreferences(KEY, 0)
+        databaseRepositoryCities = DatabaseRepository2.getInstance(settings, KEY)
+        _presenter = AddCityFragmentPresenter(databaseRepositoryCities, this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.city_add_fragment, container, false)
         updateUi(view)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return view
     }
 
-    private fun updateUi(view: View?) {
-        addcity_btn.setOnClickListener(View.OnClickListener {
-            cityadd_text.text
+    private fun updateUi(view: View) {
+        view.addcity_btn.setOnClickListener(View.OnClickListener {
+            _presenter.saveCity(cityadd_text.text.toString())
+            view.cityadd_text.text.clear()
+        })
+
+        view.cancel_btn.setOnClickListener(View.OnClickListener {
+            activity.changeFragment(R.id.content_main, CityListFragment())
         })
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        (context?.applicationContext as MainApplication).component.inject(this)
+        this.activity = context as MainActivity;
     }
 
     fun showSnackBar() {
         Snackbar.make(this.view!!, "City Added", Snackbar.LENGTH_SHORT).show()
     }
+
+    fun returnToCityList() {
+        activity.changeFragment(R.id.content_main, CityListFragment())
+    }
+
 }

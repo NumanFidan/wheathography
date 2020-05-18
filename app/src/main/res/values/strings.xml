@@ -2,4 +2,10 @@
     <string name="app_name">wheathograophy</string>
     <string name="add_city">Add City</string>
     <string name="type_to_add_city">Type to add city</string>
+    <string name="ok">OK</string>
+    <string name="we_face_with_an_error">We faced with an Error</string>
+    <string name="delete_the_city">Delete the City</string>
+    <string name="delete_city">DELETE CITY</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

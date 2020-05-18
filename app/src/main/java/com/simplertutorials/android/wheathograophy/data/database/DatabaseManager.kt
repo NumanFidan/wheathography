@@ -13,15 +13,27 @@ class DatabaseManager(private val editor: SharedPreferences.Editor,
         editor.apply()
     }
 
-    fun deleteValue(key: String){
+    fun deleteValue(key: String) {
         editor.remove(key)
         editor.apply()
     }
 
     fun readSet(key: String): MutableSet<String>? {
         return if (settings.contains(key))
-            settings.getStringSet(key,null)
+            settings.getStringSet(key, null)
         else
             null
+    }
+
+    fun writeStringValue(key: String, value: String) {
+        if (settings.contains(key))
+            return
+        editor.putString(key, value)
+        editor.apply()
+    }
+
+    fun readStringValue(key: String): String? {
+
+        return settings.getString(key, null)
     }
 }

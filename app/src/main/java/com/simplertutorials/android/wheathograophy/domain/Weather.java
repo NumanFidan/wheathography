@@ -7,6 +7,16 @@ public class Weather {
     private String humidity;
     private String description;
 
+    public Weather(String currentTemp, String humidity, String description) {
+        this.currentTemp = currentTemp;
+        this.humidity = humidity;
+        this.description = description;
+    }
+
+    public Weather() {
+
+    }
+
     public String getCurrentTemp() {
         return currentTemp;
     }

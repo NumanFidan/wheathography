@@ -16,7 +16,9 @@ import com.simplertutorials.android.wheathograophy.MainApplication;
 import com.simplertutorials.android.wheathograophy.R;
 import com.simplertutorials.android.wheathograophy.data.api.ApiService;
 import com.simplertutorials.android.wheathograophy.domain.ApiWeatherResponse;
+import com.simplertutorials.android.wheathograophy.ui.fragments.AddCityFragment;
 import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment;
+import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragment;
 
 import javax.inject.Inject;
 
@@ -26,58 +28,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityMVP.V
 
     @Inject
     ApiService apiService;
-    @Inject
-    DatabaseRepository databaseRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((MainApplication)getApplicationContext()).getComponent().inject(this);
-        test();
+        ((MainApplication) getApplicationContext()).getComponent().inject(this);
         presenter = new MainActivityPresenter();
 
         changeFragment(R.id.content_main, new CityListFragment());
     }
 
-    private void test() {
-        apiService.getWeather("Berlin",
-                "c762ded84f0ef4ba014105bd7091b445")
-                //Scheduler
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .toObservable()
-                .subscribe(
-                        new Observer<ApiWeatherResponse>(){
-
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onNext(ApiWeatherResponse apiWeatherResponse) {
-                                Log.w("Result", String.valueOf(apiWeatherResponse.getInformationCube().getTemp()-273.15));
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        }
-                );
-    }
-
-
     @Override
     public void changeFragment(int containerId, Fragment fragment) {
-        FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(containerId, fragment);
         ft.commit();
         presenter.attachFragment(fragment);
@@ -87,4 +52,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityMVP.V
     public Context getContext() {
         return getApplicationContext();
     }
+
+    @Override
+    public void onBackPressed() {
+        //When user press the back button, we will always turn back to the city list
+        //If we are already at the city list, then we will close the app
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+        if (fragment instanceof WeatherInfoFragment || fragment instanceof AddCityFragment)
+            changeFragment(R.id.content_main, new CityListFragment());
+        else
+            super.onBackPressed();
+    }
+
 }
