@@ -8,4 +8,5 @@
     <string name="delete_city">DELETE CITY</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="add_city">Add City</string>
 </resources>

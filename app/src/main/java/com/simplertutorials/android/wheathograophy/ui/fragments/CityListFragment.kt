@@ -10,23 +10,34 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
+import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
+import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository2
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
+import javax.inject.Inject
 
 class CityListFragment : Fragment(), OnCityClickListener {
 
-    private lateinit var recyclerView: RecyclerView
+    @Inject
+    lateinit var apiService: ApiService
+
+    private var KEY: String = "Cities"
+    private val ARG_CITY_PARAM: String = "current_city"
+
+    private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
     private lateinit var presenter: CityListPresenter
     private lateinit var databaseRepository: DatabaseRepository2
-    private var KEY: String = "Cities"
-    private val ARG_CITY_PARAM: String = "current_city"
+    private lateinit var apiRepository: ApiRepository
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,14 +49,14 @@ class CityListFragment : Fragment(), OnCityClickListener {
         cityList = ArrayList<City>()
         presenter.getCurrentCityList(cityList)
 
-        Log.w("City List", cityList.toString())
+        apiRepository = ApiRepository.getInstance()
+        (activity.applicationContext as MainApplication).component.inject(this)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val view = inflater.inflate(R.layout.city_list_fragment, container, false)
         updateUi(view)
-
         return view
     }
 
@@ -54,13 +65,22 @@ class CityListFragment : Fragment(), OnCityClickListener {
             activity.changeFragment(R.id.content_main, AddCityFragment())
         })
         setUpRecyclerView(view)
+        setUpSwipeToRefresh(view)
+    }
+
+    private fun setUpSwipeToRefresh(view: View) {
+        swipeToRefreshLayout = view.swipetorefresh_layout
+        swipeToRefreshLayout.setOnRefreshListener {
+            cityListRefresh()
+            swipeToRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun setUpRecyclerView(view: View) {
 
         val layoutManager = LinearLayoutManager(context)
 
-        recylclerViewAdapter = CityListAdapter(cityList, this)
+        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository, apiService )
         view.city_list.apply {
             setHasFixedSize(true)
             setAdapter(recylclerViewAdapter)
@@ -75,7 +95,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        this.activity = context as MainActivity;
+        this.activity = context as MainActivity
     }
 
     override fun onCityClicked(city: City) {
@@ -104,6 +124,4 @@ class CityListFragment : Fragment(), OnCityClickListener {
         }
         alertDialog.show()
     }
-
-
 }
