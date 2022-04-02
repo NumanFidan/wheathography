@@ -24,7 +24,7 @@ class AddCityFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val settings = context?.getSharedPreferences(KEY, 0)
+        val settings = requireContext().getSharedPreferences(KEY, 0)
         databaseRepositoryCities = DatabaseRepository.getInstance(settings, KEY)
         _presenter = AddCityFragmentPresenter(databaseRepositoryCities, this)
     }
@@ -52,7 +52,7 @@ class AddCityFragment: Fragment() {
     }
 
     fun showSnackBar() {
-        Snackbar.make(this.view!!, "City Added", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireView(), "City Added", Snackbar.LENGTH_SHORT).show()
     }
 
     fun returnToCityList() {

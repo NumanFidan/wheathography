@@ -40,19 +40,23 @@ class CityListFragment : Fragment(), OnCityClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val settings = context?.getSharedPreferences(KEY, 0)
+        val settings = requireContext().getSharedPreferences(KEY, 0)
         databaseRepository = DatabaseRepository.getInstance(settings, KEY)
         presenter = CityListPresenter(databaseRepository)
 
         cityList = ArrayList<City>()
         presenter.getCurrentCityList(cityList)
 
-        apiRepository = ApiRepository.instance
-        (activity.applicationContext as MainApplication).component.inject(this)
+        apiRepository = ApiRepository
+        (activity.applicationContext as MainApplication).component?.inject(this)
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.city_list_fragment, container, false)
         updateUi(view)
         return view
@@ -78,7 +82,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
 
         val layoutManager = LinearLayoutManager(context)
 
-        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository, apiService )
+        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository, apiService)
         view.city_list.apply {
             setHasFixedSize(true)
             adapter = recylclerViewAdapter
@@ -100,10 +104,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
     override fun onCityClicked(city: City) {
         //Open the Info screen of the clicked City
         //Pass the argument to the fragment
-        val fragment = WeatherInfoFragment()
-        val args = Bundle()
-        args.putParcelable(ARG_CITY_PARAM, city)
-        fragment.arguments = args
+        val fragment = WeatherInfoFragment.newInstance(city)
         activity.changeFragment(R.id.content_main, fragment)
     }
 

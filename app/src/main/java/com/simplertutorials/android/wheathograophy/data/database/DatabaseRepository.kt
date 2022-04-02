@@ -8,9 +8,9 @@ class DatabaseRepository @SuppressLint("CommitPrefEdits") private constructor(
     private val settings: SharedPreferences,
     key: String
 ) {
-    private val editor: SharedPreferences.Editor
-    private val manager: DatabaseManager
-    private val KEY: String
+    private val editor: SharedPreferences.Editor = settings.edit()
+    private val manager: DatabaseManager = DatabaseManager(editor, settings)
+    private val KEY: String = key
     val cityList: List<City>
         get() = convertToCityObject(manager.readSet(KEY))
 
@@ -58,15 +58,10 @@ class DatabaseRepository @SuppressLint("CommitPrefEdits") private constructor(
 
     companion object {
         private var instance: DatabaseRepository? = null
-        fun getInstance(settings: SharedPreferences, key: String): DatabaseRepository? {
+        fun getInstance(settings: SharedPreferences, key: String): DatabaseRepository {
             if (instance == null) instance = DatabaseRepository(settings, key)
-            return instance
+            return instance!!
         }
     }
 
-    init {
-        editor = settings.edit()
-        manager = DatabaseManager(editor, settings)
-        KEY = key
-    }
 }
