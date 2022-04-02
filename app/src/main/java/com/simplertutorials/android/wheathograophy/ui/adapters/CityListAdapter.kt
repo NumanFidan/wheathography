@@ -14,19 +14,22 @@ import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import kotlinx.android.synthetic.main.city_list_recyclerv_row.view.*
+import com.simplertutorials.android.wheathograophy.subscribe
 
+class CityListAdapter(
+    private val cityListData: ArrayList<City>,
+    private val onCityClickListener: OnCityClickListener,
+    private val apiRepository: ApiRepository,
+    private val apiService: ApiService
+) : RecyclerView.Adapter<CityListAdapter.CityListHolder>() {
 
-class CityListAdapter(private val cityListData: ArrayList<City>,
-                      private val onCityClickListener: OnCityClickListener,
-                      private val apiRepository: ApiRepository,
-                      private val apiService: ApiService)
-    : RecyclerView.Adapter<CityListAdapter.CityListHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): CityListHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): CityListHolder {
 
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.city_list_recyclerv_row, parent, false)
+            .inflate(R.layout.city_list_recyclerv_row, parent, false)
         return CityListHolder(view)
     }
 
@@ -52,14 +55,16 @@ class CityListAdapter(private val cityListData: ArrayList<City>,
         //Get weather Info from API
         //We need to do this here to create a partially loading effect with RecyclerView
         apiRepository.getWeatherInfo(apiService, city)
-                .subscribe({ n ->
-                    holder.cityTemp.text = String.format("%.2f", n.informationCube!!.temp - 273.15) + "°C"
+            .subscribe(
+                onNext = { n ->
+                    holder.cityTemp.text =
+                        String.format("%.2f", n.informationCube!!.temp - 273.15) + "°C"
                     hideProgressbar(holder)
                 },
-                        { e ->
-                            holder.cityTemp.text = "!"
-                            hideProgressbar(holder)
-                        })
+                onError = { e ->
+                    holder.cityTemp.text = "!"
+                    hideProgressbar(holder)
+                })
     }
 
     private fun hideProgressbar(holder: CityListHolder) {
@@ -67,6 +72,7 @@ class CityListAdapter(private val cityListData: ArrayList<City>,
         holder.cityTemp.visibility = View.VISIBLE
         holder.loading.visibility = View.GONE
     }
+
     private fun hideCityTemp(holder: CityListHolder) {
         //Hide the Temp Field and show the ProgressBar
         holder.cityTemp.visibility = View.GONE
@@ -80,6 +86,5 @@ class CityListAdapter(private val cityListData: ArrayList<City>,
         val cityTemp = view.row_cityweather as TextView
         val layout = view
     }
-
 
 }

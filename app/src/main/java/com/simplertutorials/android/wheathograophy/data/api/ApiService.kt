@@ -5,10 +5,11 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiService{
-    @GET ("weather")
-    fun getWeather(@Query("q")cityName:String,
-                   @Query("appid")apiKey:String)
-            : Single<ApiWeatherResponse>
+interface ApiService {
+    @GET("weather")
+    fun getWeather(
+        @Query("q") cityName: String,
+        @Query("appid") apiKey: String
+    ): Single<ApiWeatherResponse>
 
 }
