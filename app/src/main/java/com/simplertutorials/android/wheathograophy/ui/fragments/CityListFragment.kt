@@ -47,7 +47,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
         cityList = ArrayList<City>()
         presenter.getCurrentCityList(cityList)
 
-        apiRepository = ApiRepository.getInstance()
+        apiRepository = ApiRepository.instance
         (activity.applicationContext as MainApplication).component.inject(this)
 
     }

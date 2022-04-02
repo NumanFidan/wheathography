@@ -10,7 +10,7 @@ import com.simplertutorials.android.wheathograophy.domain.Weather
 class WeatherInfoPresenter(private val view: WeatherInfoFragment,
                            private val apiService: ApiService) {
 
-    private val apiRepository = ApiRepository.getInstance()
+    private val apiRepository = ApiRepository.instance
 
     @SuppressLint("CheckResult")
     fun fetchCityWeather(currentCity: City, view: View) {
