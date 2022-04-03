@@ -8,7 +8,7 @@ import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ActivityCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,5 +38,11 @@ class MainActivity : AppCompatActivity() {
             R.id.content_main,
             CityListFragment()
         ) else super.onBackPressed()
+    }
+
+    override fun launchFragment(fragment: Fragment) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.content_main, fragment)
+        ft.commit()
     }
 }
