@@ -33,7 +33,6 @@ class SharedPreferencesManager(private val editor: SharedPreferences.Editor,
     }
 
     fun readStringValue(key: String): String? {
-
         return settings.getString(key, null)
     }
 }
