@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.wheathograophy.MainApplication
@@ -14,17 +15,19 @@ import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
+import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject
 
-class CityListFragment : Fragment(), OnCityClickListener {
-
+class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>(),
+    OnCityClickListener {
     @Inject
     lateinit var apiService: ApiService
 
@@ -128,4 +131,16 @@ class CityListFragment : Fragment(), OnCityClickListener {
         }
         alertDialog.show()
     }
+
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): CityListFragmentBinding? =
+        CityListFragmentBinding.inflate(inflater, container, false)
+
+    override fun generateViewModel(): CityListViewModel =
+        ViewModelProvider(
+            this,
+            CityListViewModel.Factory(databaseRepository)
+        ).get(CityListViewModel::class.java)
 }
