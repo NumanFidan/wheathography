@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.simplertutorials.android.wheathograophy.domain.City
 
-class DatabaseRepository @SuppressLint("CommitPrefEdits") private constructor(
+class StorageRepository @SuppressLint("CommitPrefEdits") private constructor(
     private val settings: SharedPreferences,
     key: String
 ) {
@@ -57,9 +57,9 @@ class DatabaseRepository @SuppressLint("CommitPrefEdits") private constructor(
     }
 
     companion object {
-        private var instance: DatabaseRepository? = null
-        fun getInstance(settings: SharedPreferences, key: String): DatabaseRepository {
-            if (instance == null) instance = DatabaseRepository(settings, key)
+        private var instance: StorageRepository? = null
+        fun getInstance(settings: SharedPreferences, key: String): StorageRepository {
+            if (instance == null) instance = StorageRepository(settings, key)
             return instance!!
         }
     }

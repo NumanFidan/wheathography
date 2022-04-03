@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
-    private lateinit var databaseRepositoryCities: DatabaseRepository
+    private lateinit var storageRepositoryCities: StorageRepository
     private lateinit var activity: MainActivity
     private var KEY: String = "Cities"
 
@@ -26,7 +26,7 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
         super.onCreate(savedInstanceState)
 
         val settings = requireContext().getSharedPreferences(KEY, 0)
-        databaseRepositoryCities = DatabaseRepository.getInstance(settings, KEY)
+        storageRepositoryCities = StorageRepository.getInstance(settings, KEY)
     }
 
     override fun onCreateView(
@@ -73,7 +73,7 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
     override fun generateViewModel(): AddCityViewModel =
         ViewModelProvider(
             this, AddCityViewModel.Factory(
-                databaseRepositoryCities
+                storageRepositoryCities
             )
         ).get(AddCityViewModel::class.java)
 

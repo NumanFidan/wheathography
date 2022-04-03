@@ -12,8 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
-import com.simplertutorials.android.wheathograophy.data.api.ApiService
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
@@ -38,13 +37,13 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
-    private lateinit var databaseRepository: DatabaseRepository
+    private lateinit var storageRepository: StorageRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val settings = requireContext().getSharedPreferences(KEY, 0)
-        databaseRepository = DatabaseRepository.getInstance(settings, KEY)
+        storageRepository = StorageRepository.getInstance(settings, KEY)
 
         cityList = ArrayList<City>()
         viewModel.getCurrentCityList(cityList)
@@ -137,6 +136,6 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     override fun generateViewModel(): CityListViewModel =
         ViewModelProvider(
             this,
-            CityListViewModel.Factory(databaseRepository)
+            CityListViewModel.Factory(storageRepository)
         ).get(CityListViewModel::class.java)
 }
