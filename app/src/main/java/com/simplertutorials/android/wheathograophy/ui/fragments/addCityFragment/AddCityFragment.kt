@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments
+package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
 
 import android.content.Context
 import android.os.Bundle
@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
+import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment
 import kotlinx.android.synthetic.main.city_add_fragment.*
 import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
