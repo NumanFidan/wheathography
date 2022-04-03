@@ -1,6 +1,5 @@
 package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,59 +7,47 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.MainApplication
-import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
-import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import kotlinx.android.synthetic.main.city_add_fragment.*
-import kotlinx.android.synthetic.main.city_add_fragment.view.*
 import javax.inject.Inject
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
     @Inject
     lateinit var storageRepositoryCities: StorageRepository
-    private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity.applicationContext as MainApplication).component?.inject(this)
-    }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.city_add_fragment, container, false)
-        updateUi(view)
-        return view
+        (requireActivity().applicationContext as MainApplication).component?.inject(this)
     }
 
-    private fun updateUi(view: View) {
-        view.addcity_btn.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpUI()
+        observeUiEvents()
+    }
+
+    private fun observeUiEvents() {
+        viewModel.getRequestSnackBarLiveData()
+            .observe {
+                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+            }
+        viewModel.getRequestCityListFragment()
+            .observe {
+                activityCallback.launchFragment(it)
+            }
+    }
+
+    private fun setUpUI() {
+        B.addcityBtn.setOnClickListener {
             val cityName = cityadd_text.text.toString()
-            viewModel.saveCity(cityName)
+            viewModel.onAddCityClicked(cityName)
         }
-
-        view.cancel_btn.setOnClickListener {
-            activity.changeFragment(R.id.content_main, CityListFragment())
+        B.cancelBtn.setOnClickListener {
+            viewModel.onCancelClicked()
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        this.activity = context as MainActivity;
-    }
-
-    fun showSnackBar() {
-        Snackbar.make(requireView(), "City Added", Snackbar.LENGTH_SHORT).show()
-    }
-
-    fun returnToCityList() {
-        activity.changeFragment(R.id.content_main, CityListFragment())
     }
 
     override fun inflateViewBinding(

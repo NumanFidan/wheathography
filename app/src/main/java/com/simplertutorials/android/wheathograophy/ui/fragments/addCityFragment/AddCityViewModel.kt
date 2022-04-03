@@ -19,11 +19,19 @@ class AddCityViewModel(
     fun getRequestSnackBarLiveData(): LiveData<String> = requestSnackBarLiveData
     fun getRequestCityListFragment(): LiveData<CityListFragment> = requestCityListFragment
 
-    fun saveCity(cityName: String) {
+    fun onAddCityClicked(cityName: String) {
+        saveCity(cityName)
+    }
+
+    fun onCancelClicked() {
+        requestCityListFragment.value = CityListFragment()
+    }
+
+    private fun saveCity(cityName: String) {
         //save the city, show the info snackBar and return to the CityListFragment
         val city = City(cityName)
         storageRepository.addCity(city)
-        requestSnackBarLiveData.value = "meessage"
+        requestSnackBarLiveData.value = "City Added $cityName"
         requestCityListFragment.value = CityListFragment()
     }
 
@@ -31,6 +39,5 @@ class AddCityViewModel(
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return AddCityViewModel(storageRepository) as T
         }
-
     }
 }
