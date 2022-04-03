@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
-import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment
+import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 
 class AddCityViewModel(
     private val databaseRepository: DatabaseRepository

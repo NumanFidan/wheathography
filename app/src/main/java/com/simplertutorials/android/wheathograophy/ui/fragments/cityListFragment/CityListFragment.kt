@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments
+package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
 
 import android.app.AlertDialog
 import android.content.Context
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.wheathograophy.MainApplication
@@ -14,15 +15,19 @@ import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
+import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
+import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject
 
-class CityListFragment : Fragment(), OnCityClickListener {
+class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>(),
+    OnCityClickListener {
 
     @Inject
     lateinit var apiService: ApiService
@@ -34,7 +39,6 @@ class CityListFragment : Fragment(), OnCityClickListener {
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
-    private lateinit var presenter: CityListPresenter
     private lateinit var databaseRepository: DatabaseRepository
     private lateinit var apiRepository: ApiRepository
 
@@ -43,10 +47,9 @@ class CityListFragment : Fragment(), OnCityClickListener {
 
         val settings = requireContext().getSharedPreferences(KEY, 0)
         databaseRepository = DatabaseRepository.getInstance(settings, KEY)
-        presenter = CityListPresenter(databaseRepository)
 
         cityList = ArrayList<City>()
-        presenter.getCurrentCityList(cityList)
+        viewModel.getCurrentCityList(cityList)
 
         apiRepository = ApiRepository
         (activity.applicationContext as MainApplication).component?.inject(this)
@@ -58,6 +61,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.city_list_fragment, container, false)
         updateUi(view)
         return view
@@ -93,7 +97,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
 
     private fun cityListRefresh() {
         //get up to date list and notify the adapter about changes
-        presenter.getCurrentCityList(cityList)
+        viewModel.getCurrentCityList(cityList)
         recylclerViewAdapter.notifyDataSetChanged()
     }
 
@@ -118,7 +122,7 @@ class CityListFragment : Fragment(), OnCityClickListener {
         alertDialog.setMessage(getString(R.string.delete_the_city) + city.name)
         alertDialog.setTitle(getString(R.string.delete_city))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.delete)) { _, _ ->
-            presenter.deleteCity(city)
+            viewModel.deleteCity(city)
             alertDialog.dismiss()
             cityListRefresh()
         }
@@ -127,4 +131,16 @@ class CityListFragment : Fragment(), OnCityClickListener {
         }
         alertDialog.show()
     }
+
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): CityListFragmentBinding? =
+        CityListFragmentBinding.inflate(inflater, container, false)
+
+    override fun generateViewModel(): CityListViewModel =
+        ViewModelProvider(
+            this,
+            CityListViewModel.Factory(databaseRepository)
+        ).get(CityListViewModel::class.java)
 }

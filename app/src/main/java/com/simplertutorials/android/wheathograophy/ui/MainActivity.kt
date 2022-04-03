@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment
+import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 
