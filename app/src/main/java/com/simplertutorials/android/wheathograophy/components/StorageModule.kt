@@ -24,7 +24,7 @@ class StorageModule {
     }
 
     @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferences? {
+    fun provideSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
     }
 

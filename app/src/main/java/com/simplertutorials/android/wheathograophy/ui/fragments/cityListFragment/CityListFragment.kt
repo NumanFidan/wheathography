@@ -30,21 +30,18 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     @Inject
     lateinit var apiRepository: ApiRepository
 
-    private var KEY: String = "Cities"
+    @Inject
+    lateinit var storageRepository: StorageRepository
 
+    private var KEY: String = "Cities"
     private val ARG_CITY_PARAM: String = "current_city"
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
-    private lateinit var storageRepository: StorageRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val settings = requireContext().getSharedPreferences(KEY, 0)
-        storageRepository = StorageRepository.getInstance(settings, KEY)
-
         cityList = ArrayList<City>()
         viewModel.getCurrentCityList(cityList)
 

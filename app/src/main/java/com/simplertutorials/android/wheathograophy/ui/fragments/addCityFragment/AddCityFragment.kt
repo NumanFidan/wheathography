@@ -15,19 +15,14 @@ import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import kotlinx.android.synthetic.main.city_add_fragment.*
 import kotlinx.android.synthetic.main.city_add_fragment.view.*
+import javax.inject.Inject
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
-    private lateinit var storageRepositoryCities: StorageRepository
+    @Inject
+    lateinit var storageRepositoryCities: StorageRepository
     private lateinit var activity: MainActivity
     private var KEY: String = "Cities"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val settings = requireContext().getSharedPreferences(KEY, 0)
-        storageRepositoryCities = StorageRepository.getInstance(settings, KEY)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
