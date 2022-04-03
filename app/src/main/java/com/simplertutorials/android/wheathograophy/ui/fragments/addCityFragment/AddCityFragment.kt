@@ -1,35 +1,40 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments
+package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
+import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
+import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment
 import kotlinx.android.synthetic.main.city_add_fragment.*
 import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
-class AddCityFragment: Fragment() {
+class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
-    private lateinit var _presenter: AddCityFragmentPresenter
     private lateinit var databaseRepositoryCities: DatabaseRepository
     private lateinit var activity: MainActivity
-    private var KEY:String = "Cities"
+    private var KEY: String = "Cities"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val settings = requireContext().getSharedPreferences(KEY, 0)
         databaseRepositoryCities = DatabaseRepository.getInstance(settings, KEY)
-        _presenter = AddCityFragmentPresenter(databaseRepositoryCities, this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.city_add_fragment, container, false)
         updateUi(view)
         return view
@@ -38,7 +43,7 @@ class AddCityFragment: Fragment() {
     private fun updateUi(view: View) {
         view.addcity_btn.setOnClickListener {
             val cityName = cityadd_text.text.toString()
-            _presenter.saveCity(cityName)
+            viewModel.saveCity(cityName)
         }
 
         view.cancel_btn.setOnClickListener {
@@ -58,5 +63,18 @@ class AddCityFragment: Fragment() {
     fun returnToCityList() {
         activity.changeFragment(R.id.content_main, CityListFragment())
     }
+
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): CityAddFragmentBinding? =
+        CityAddFragmentBinding.inflate(inflater, container, false)
+
+    override fun generateViewModel(): AddCityViewModel =
+        ViewModelProvider(
+            this, AddCityViewModel.Factory(
+                databaseRepositoryCities
+            )
+        ).get(AddCityViewModel::class.java)
 
 }
