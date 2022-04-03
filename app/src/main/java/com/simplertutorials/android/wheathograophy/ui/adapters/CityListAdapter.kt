@@ -20,7 +20,6 @@ class CityListAdapter(
     private val cityListData: ArrayList<City>,
     private val onCityClickListener: OnCityClickListener,
     private val apiRepository: ApiRepository,
-    private val apiService: ApiService
 ) : RecyclerView.Adapter<CityListAdapter.CityListHolder>() {
 
     override fun onCreateViewHolder(
@@ -54,7 +53,7 @@ class CityListAdapter(
 
         //Get weather Info from API
         //We need to do this here to create a partially loading effect with RecyclerView
-        apiRepository.getWeatherInfo(apiService, city)
+        apiRepository.getWeatherInfo(city)
             .subscribe(
                 onNext = { n ->
                     holder.cityTemp.text =

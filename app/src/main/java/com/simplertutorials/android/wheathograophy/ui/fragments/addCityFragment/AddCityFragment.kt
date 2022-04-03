@@ -7,28 +7,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import kotlinx.android.synthetic.main.city_add_fragment.*
 import kotlinx.android.synthetic.main.city_add_fragment.view.*
+import javax.inject.Inject
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
-    private lateinit var databaseRepositoryCities: DatabaseRepository
+    @Inject
+    lateinit var storageRepositoryCities: StorageRepository
     private lateinit var activity: MainActivity
-    private var KEY: String = "Cities"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val settings = requireContext().getSharedPreferences(KEY, 0)
-        databaseRepositoryCities = DatabaseRepository.getInstance(settings, KEY)
+        (activity.applicationContext as MainApplication).component?.inject(this)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,7 +72,7 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
     override fun generateViewModel(): AddCityViewModel =
         ViewModelProvider(
             this, AddCityViewModel.Factory(
-                databaseRepositoryCities
+                storageRepositoryCities
             )
         ).get(AddCityViewModel::class.java)
 

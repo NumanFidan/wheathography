@@ -1,5 +1,6 @@
 package com.simplertutorials.android.wheathograophy.components
 
+import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,12 @@ class ApiModule {
 
     @Singleton
     @Provides
+    fun provideApiRepository(apiService: ApiService): ApiRepository {
+        return ApiRepository(apiService)
+    }
+
+    @Singleton
+    @Provides
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
@@ -24,11 +31,11 @@ class ApiModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build()
+            .baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
     }
 
     @Singleton

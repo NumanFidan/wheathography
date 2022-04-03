@@ -14,8 +14,7 @@ import com.simplertutorials.android.wheathograophy.subscribe
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
 
 class WeatherInfoViewModel(
-    private val apiRepository: ApiRepository,
-    private val apiService: ApiService
+    private val apiRepository: ApiRepository
 ) : BaseViewModel() {
 
     private val requestErrorDialog: MutableLiveData<String> = MutableLiveData()
@@ -28,7 +27,7 @@ class WeatherInfoViewModel(
     fun fetchCityWeather(currentCity: City, view: View) {
         //fetch the weather from the API and update the fields
         var weather: Weather? = null
-        apiRepository.getWeatherInfo(apiService, currentCity)
+        apiRepository.getWeatherInfo(currentCity)
             .subscribe(
                 onNext = { apiWeatherResponse ->
                     weather = Weather(
@@ -46,10 +45,9 @@ class WeatherInfoViewModel(
 
     class Factory(
         private val apiRepository: ApiRepository,
-        private val apiService: ApiService
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return WeatherInfoViewModel(apiRepository, apiService) as T
+            return WeatherInfoViewModel(apiRepository) as T
         }
 
     }

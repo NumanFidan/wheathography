@@ -12,8 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
-import com.simplertutorials.android.wheathograophy.data.api.ApiService
-import com.simplertutorials.android.wheathograophy.data.database.DatabaseRepository
+import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
@@ -29,30 +28,24 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     OnCityClickListener {
 
     @Inject
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
+
+    @Inject
+    lateinit var storageRepository: StorageRepository
 
     private var KEY: String = "Cities"
     private val ARG_CITY_PARAM: String = "current_city"
-
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
-    private lateinit var databaseRepository: DatabaseRepository
-    private lateinit var apiRepository: ApiRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val settings = requireContext().getSharedPreferences(KEY, 0)
-        databaseRepository = DatabaseRepository.getInstance(settings, KEY)
-
         cityList = ArrayList<City>()
         viewModel.getCurrentCityList(cityList)
 
-        apiRepository = ApiRepository
         (activity.applicationContext as MainApplication).component?.inject(this)
-
     }
 
     override fun onCreateView(
@@ -86,7 +79,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
 
         val layoutManager = LinearLayoutManager(context)
 
-        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository, apiService)
+        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository)
         view.city_list.apply {
             setHasFixedSize(true)
             adapter = recylclerViewAdapter
@@ -140,6 +133,6 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     override fun generateViewModel(): CityListViewModel =
         ViewModelProvider(
             this,
-            CityListViewModel.Factory(databaseRepository)
+            CityListViewModel.Factory(storageRepository)
         ).get(CityListViewModel::class.java)
 }
