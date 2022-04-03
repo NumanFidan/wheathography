@@ -26,7 +26,6 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
     @Inject
     lateinit var apiService: ApiService
     private lateinit var currentCity: City
-    private lateinit var _presenter: WeatherInfoPresenter
     private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +35,6 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
         }
 
         (activity.applicationContext as MainApplication).component?.inject(this)
-        _presenter = WeatherInfoPresenter(this, apiService)
     }
 
     override fun onCreateView(
@@ -44,6 +42,7 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.weather_info_fragment, container, false)
         updateUi(view)
         return view
@@ -51,7 +50,7 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
 
     private fun updateUi(view: View) {
         //fetch the weather Info from API and update UI
-        _presenter.fetchCityWeather(currentCity, view)
+        viewModel.fetchCityWeather(currentCity, view)
     }
 
     override fun onAttach(context: Context) {
