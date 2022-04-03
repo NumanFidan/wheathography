@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments
+package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -8,22 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
+import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
+import com.simplertutorials.android.wheathograophy.databinding.WeatherInfoFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
+import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import kotlinx.android.synthetic.main.weather_info_fragment.view.*
 import javax.inject.Inject
 
-class WeatherInfoFragment : Fragment() {
+class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragmentBinding>() {
 
     @Inject
     lateinit var apiService: ApiService
     private lateinit var currentCity: City
-    private lateinit var _presenter: WeatherInfoPresenter
     private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,6 @@ class WeatherInfoFragment : Fragment() {
         }
 
         (activity.applicationContext as MainApplication).component?.inject(this)
-        _presenter = WeatherInfoPresenter(this, apiService)
     }
 
     override fun onCreateView(
@@ -41,6 +42,7 @@ class WeatherInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.weather_info_fragment, container, false)
         updateUi(view)
         return view
@@ -48,7 +50,7 @@ class WeatherInfoFragment : Fragment() {
 
     private fun updateUi(view: View) {
         //fetch the weather Info from API and update UI
-        _presenter.fetchCityWeather(currentCity, view)
+        viewModel.fetchCityWeather(currentCity, view)
     }
 
     override fun onAttach(context: Context) {
@@ -87,5 +89,15 @@ class WeatherInfoFragment : Fragment() {
             }
         }
     }
+
+    override fun inflateViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): WeatherInfoFragmentBinding? = WeatherInfoFragmentBinding.inflate(inflater, container, false)
+
+    override fun generateViewModel(): WeatherInfoViewModel =
+        ViewModelProvider(this, WeatherInfoViewModel.Factory(ApiRepository, apiService)).get(
+            WeatherInfoViewModel::class.java
+        )
 
 }

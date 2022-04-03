@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,7 +20,7 @@ import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragment
+import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject
