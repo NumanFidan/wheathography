@@ -2,21 +2,16 @@ package com.simplertutorials.android.wheathograophy.domain
 
 import com.google.gson.annotations.SerializedName
 
-class ApiWeatherResponse {
+data class ApiWeatherResponse(
+    @SerializedName("main") val informationCube: InformationCube,
+    @SerializedName("weather") val weather: List<WeatherResponse>
+)
 
-    @SerializedName("main")
-    var informationCube: InformationCube ?=null
-    @SerializedName("weather")
-    var weather = ArrayList<WeatherResponse>()
-}
+data class WeatherResponse(
+    @SerializedName("description") val description: String? = null
+)
 
-class WeatherResponse{
-    @SerializedName("description")
-    var description:String ?=null
-}
-class InformationCube {
-    @SerializedName("temp")
-    var temp:Float = 0.0f
-    @SerializedName("humidity")
-    var humidity:Float = 0.0f
-}
+data class InformationCube(
+    @SerializedName("temp") val temp: Float,
+    @SerializedName("humidity") val humidity: Float
+)
