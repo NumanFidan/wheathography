@@ -52,7 +52,7 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
     private fun updateFields(currentCity: City) {
         B.cityName.text = currentCity.name
         B.humidity.text = currentCity.weather?.humidity
-        B.temprature.text = currentCity.weather?.currentTemp + "°C"
+        B.temprature.text = getString(R.string.temp_with_celsius, currentCity.weather?.currentTemp )
         B.description.text = currentCity.weather?.description
     }
 

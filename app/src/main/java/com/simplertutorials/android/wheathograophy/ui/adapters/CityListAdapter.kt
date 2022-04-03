@@ -14,7 +14,7 @@ import com.simplertutorials.android.wheathograophy.domain.Weather
 import kotlinx.android.synthetic.main.city_list_recyclerv_row.view.*
 
 class CityListAdapter(
-    context: Context,
+    private val context: Context,
     private val onCityClicked: (City) -> Unit,
     private val onCityLongClicked: (City) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -51,7 +51,9 @@ class CityListAdapter(
 
         fun onBind(city: City) {
             cityName.text = city.name
-            cityTemp.text = city.weather?.currentTemp?.let { "$it°C" } ?: "!"
+            cityTemp.text =
+                city.weather?.currentTemp?.let { context.getString(R.string.temp_with_celsius, it) }
+                    ?: context.getString(R.string.temp_not_available)
             when (city.weather?.weatherRequestState) {
                 Weather.RequestState.Loading -> hideCityTemp()
                 else -> hideProgressbar()
