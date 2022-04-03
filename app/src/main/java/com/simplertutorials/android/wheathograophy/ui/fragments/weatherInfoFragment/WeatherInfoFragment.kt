@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments
+package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
