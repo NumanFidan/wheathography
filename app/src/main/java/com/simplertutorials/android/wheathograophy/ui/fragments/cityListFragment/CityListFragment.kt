@@ -28,6 +28,7 @@ import javax.inject.Inject
 
 class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>(),
     OnCityClickListener {
+
     @Inject
     lateinit var apiService: ApiService
 
@@ -38,7 +39,6 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
-    private lateinit var presenter: CityListPresenter
     private lateinit var databaseRepository: DatabaseRepository
     private lateinit var apiRepository: ApiRepository
 
@@ -47,10 +47,9 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
 
         val settings = requireContext().getSharedPreferences(KEY, 0)
         databaseRepository = DatabaseRepository.getInstance(settings, KEY)
-        presenter = CityListPresenter(databaseRepository)
 
         cityList = ArrayList<City>()
-        presenter.getCurrentCityList(cityList)
+        viewModel.getCurrentCityList(cityList)
 
         apiRepository = ApiRepository
         (activity.applicationContext as MainApplication).component?.inject(this)
@@ -62,6 +61,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.city_list_fragment, container, false)
         updateUi(view)
         return view
@@ -97,7 +97,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
 
     private fun cityListRefresh() {
         //get up to date list and notify the adapter about changes
-        presenter.getCurrentCityList(cityList)
+        viewModel.getCurrentCityList(cityList)
         recylclerViewAdapter.notifyDataSetChanged()
     }
 
@@ -122,7 +122,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         alertDialog.setMessage(getString(R.string.delete_the_city) + city.name)
         alertDialog.setTitle(getString(R.string.delete_city))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.delete)) { _, _ ->
-            presenter.deleteCity(city)
+            viewModel.deleteCity(city)
             alertDialog.dismiss()
             cityListRefresh()
         }
