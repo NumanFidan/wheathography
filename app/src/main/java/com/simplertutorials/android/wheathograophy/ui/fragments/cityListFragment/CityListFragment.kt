@@ -24,28 +24,23 @@ import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject
 
-class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>(),
-    OnCityClickListener {
+class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>() {
 
     @Inject
     lateinit var apiRepository: ApiRepository
 
     @Inject
     lateinit var storageRepository: StorageRepository
-
-    private var KEY: String = "Cities"
-    private val ARG_CITY_PARAM: String = "current_city"
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
-    private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cityList = ArrayList<City>()
         viewModel.getCurrentCityList(cityList)
 
-        (activity.applicationContext as MainApplication).component?.inject(this)
+        (requireActivity().applicationContext as MainApplication).component?.inject(this)
     }
 
     override fun onCreateView(
@@ -61,7 +56,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
 
     private fun updateUi(view: View) {
         view.add_city_btn.setOnClickListener {
-            activity.changeFragment(R.id.content_main, AddCityFragment())
+            activityCallback.launchFragment(AddCityFragment())
         }
         setUpRecyclerView(view)
         setUpSwipeToRefresh(view)
@@ -79,8 +74,15 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
 
         val layoutManager = LinearLayoutManager(context)
 
-        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository)
-        view.city_list.apply {
+        recylclerViewAdapter =
+            CityListAdapter(
+                requireContext(),
+                cityList,
+                apiRepository,
+                ::onCityClicked,
+                ::onCityLongClicked
+            )
+        B.cityList.apply {
             setHasFixedSize(true)
             adapter = recylclerViewAdapter
             this.layoutManager = layoutManager
@@ -93,19 +95,14 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         recylclerViewAdapter.notifyDataSetChanged()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        this.activity = context as MainActivity
-    }
-
-    override fun onCityClicked(city: City) {
+    private fun onCityClicked(city: City) {
         //Open the Info screen of the clicked City
         //Pass the argument to the fragment
         val fragment = WeatherInfoFragment.newInstance(city)
-        activity.changeFragment(R.id.content_main, fragment)
+        activityCallback.launchFragment(fragment)
     }
 
-    override fun onCityLongClicked(city: City) {
+    private fun onCityLongClicked(city: City) {
         showDeleteConfirmationDialog(city)
     }
 

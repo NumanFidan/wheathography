@@ -18,8 +18,8 @@ class CityListAdapter(
     context: Context,
     private val cityListData: ArrayList<City>,
     private val apiRepository: ApiRepository,
-    private val onCityLongClicked: (City) -> Unit,
     private val onCityClicked: (City) -> Unit,
+    private val onCityLongClicked: (City) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val layoutInflater = LayoutInflater.from(context)
