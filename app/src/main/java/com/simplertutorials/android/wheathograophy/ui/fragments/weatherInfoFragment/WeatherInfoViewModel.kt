@@ -11,15 +11,18 @@ import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
 import com.simplertutorials.android.wheathograophy.subscribe
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
+import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 
 class WeatherInfoViewModel(
     private val apiRepository: ApiRepository
 ) : BaseViewModel() {
 
     private val requestErrorDialog: MutableLiveData<String> = MutableLiveData()
+    private val requestCityListFragment: MutableLiveData<CityListFragment> = MutableLiveData()
     private val updateFieldsLiveData: MutableLiveData<City> = MutableLiveData()
 
     fun getRequestErrorDialog(): LiveData<String> = requestErrorDialog
+    fun getRequestCityListFragment(): LiveData<CityListFragment> = requestCityListFragment
     fun getUpdateFieldsLiveData(): LiveData<City> = updateFieldsLiveData
 
     @SuppressLint("CheckResult")
@@ -34,7 +37,7 @@ class WeatherInfoViewModel(
                         String.format("%.2f", apiWeatherResponse.informationCube.humidity),
                         apiWeatherResponse.weather[0].description,
                         Weather.RequestState.Success
-                    );
+                    )
                 },
                 onError = { e -> requestErrorDialog.value = e.message },
                 onComplete = {
@@ -45,11 +48,10 @@ class WeatherInfoViewModel(
 
     fun passArguments(currentCity: City) {
         fetchCityWeather(currentCity)
-        TODO("Not yet implemented")
     }
 
     fun errorDialogClosed() {
-        TODO("Not yet implemented")
+        requestCityListFragment.postValue(CityListFragment())
     }
 
     class Factory(

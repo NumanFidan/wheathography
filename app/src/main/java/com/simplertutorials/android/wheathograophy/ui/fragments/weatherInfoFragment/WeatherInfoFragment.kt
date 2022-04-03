@@ -44,6 +44,8 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
             .observe { showErrorDialog(it) }
         viewModel.getUpdateFieldsLiveData()
             .observe { updateFields(it) }
+        viewModel.getRequestCityListFragment()
+            .observe { activityCallback.launchFragment(it) }
     }
 
     @SuppressLint("SetTextI18n")
