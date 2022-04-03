@@ -7,7 +7,13 @@ import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragm
 import dagger.Component
 
 @Singleton
-@Component(modules = [ApiModule::class, StorageModule::class, ContextModule::class])
+@Component(
+    modules = [
+        ApiModule::class,
+        StorageModule::class,
+        ContextModule::class,
+        ManagersModule::class]
+)
 interface ApplicationComponent {
     fun inject(addCityFragment: AddCityFragment?)
     fun inject(cityListFragment: CityListFragment?)
