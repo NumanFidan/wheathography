@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
-import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
 import com.simplertutorials.android.wheathograophy.subscribe
@@ -33,7 +32,8 @@ class WeatherInfoViewModel(
                     weather = Weather(
                         String.format("%.2f", apiWeatherResponse.informationCube!!.temp - 273.15),
                         String.format("%.2f", apiWeatherResponse.informationCube!!.humidity),
-                        apiWeatherResponse.weather[0].description
+                        apiWeatherResponse.weather[0].description,
+                        Weather.RequestState.Success
                     );
                 },
                 onError = { e -> requestErrorDialog.value = e.message },
