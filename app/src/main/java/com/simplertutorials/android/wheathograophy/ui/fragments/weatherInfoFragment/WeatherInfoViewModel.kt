@@ -25,8 +25,15 @@ class WeatherInfoViewModel(
     fun getRequestCityListFragment(): LiveData<CityListFragment> = requestCityListFragment
     fun getUpdateFieldsLiveData(): LiveData<City> = updateFieldsLiveData
 
-    @SuppressLint("CheckResult")
-    fun fetchCityWeather(currentCity: City) {
+    fun passArguments(currentCity: City) {
+        fetchCityWeather(currentCity)
+    }
+
+    fun errorDialogClosed() {
+        requestCityListFragment.postValue(CityListFragment())
+    }
+
+    private fun fetchCityWeather(currentCity: City) {
         //fetch the weather from the API and update the fields
         var weather: Weather? = null
         apiRepository.getWeatherInfo(currentCity)
@@ -46,20 +53,11 @@ class WeatherInfoViewModel(
                 })
     }
 
-    fun passArguments(currentCity: City) {
-        fetchCityWeather(currentCity)
-    }
-
-    fun errorDialogClosed() {
-        requestCityListFragment.postValue(CityListFragment())
-    }
-
     class Factory(
         private val apiRepository: ApiRepository,
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return WeatherInfoViewModel(apiRepository) as T
         }
-
     }
 }
