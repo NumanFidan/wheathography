@@ -14,6 +14,7 @@ import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
+import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import kotlinx.android.synthetic.main.weather_info_fragment.view.*
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments
+package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
 
 import android.app.AlertDialog
 import android.content.Context
@@ -18,6 +18,7 @@ import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
+import com.simplertutorials.android.wheathograophy.ui.fragments.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject

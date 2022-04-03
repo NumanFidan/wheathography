@@ -12,7 +12,7 @@ import com.simplertutorials.android.wheathograophy.data.database.DatabaseReposit
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
 import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import com.simplertutorials.android.wheathograophy.ui.fragments.CityListFragment
+import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
 import kotlinx.android.synthetic.main.city_add_fragment.*
 import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
