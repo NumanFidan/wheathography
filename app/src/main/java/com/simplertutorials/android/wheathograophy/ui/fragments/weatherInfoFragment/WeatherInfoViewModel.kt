@@ -23,15 +23,15 @@ class WeatherInfoViewModel(
     fun getUpdateFieldsLiveData(): LiveData<City> = updateFieldsLiveData
 
     @SuppressLint("CheckResult")
-    fun fetchCityWeather(currentCity: City, view: View) {
+    fun fetchCityWeather(currentCity: City) {
         //fetch the weather from the API and update the fields
         var weather: Weather? = null
         apiRepository.getWeatherInfo(currentCity)
             .subscribe(
                 onNext = { apiWeatherResponse ->
                     weather = Weather(
-                        String.format("%.2f", apiWeatherResponse.informationCube!!.temp - 273.15),
-                        String.format("%.2f", apiWeatherResponse.informationCube!!.humidity),
+                        String.format("%.2f", apiWeatherResponse.informationCube.temp - 273.15),
+                        String.format("%.2f", apiWeatherResponse.informationCube.humidity),
                         apiWeatherResponse.weather[0].description,
                         Weather.RequestState.Success
                     );
@@ -41,6 +41,15 @@ class WeatherInfoViewModel(
                     val updatedCity = currentCity.copy(weather = weather)
                     updateFieldsLiveData.value = updatedCity
                 })
+    }
+
+    fun passArguments(currentCity: City) {
+        fetchCityWeather(currentCity)
+        TODO("Not yet implemented")
+    }
+
+    fun errorDialogClosed() {
+        TODO("Not yet implemented")
     }
 
     class Factory(

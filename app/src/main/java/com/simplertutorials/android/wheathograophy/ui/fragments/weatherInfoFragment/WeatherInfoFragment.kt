@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,69 +26,45 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
 
     @Inject
     lateinit var apiRepository: ApiRepository
-    private lateinit var currentCity: City
-    private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (requireActivity().applicationContext as MainApplication).component?.inject(this)
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            currentCity = requireArguments().get(ARG_CITY_PARAM) as City
-        }
-
-        (activity.applicationContext as MainApplication).component?.inject(this)
+        val currentCity = requireArguments().get(ARG_CITY_PARAM) as City
+        viewModel.passArguments(currentCity)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.weather_info_fragment, container, false)
-        updateUi(view)
-        return view
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeUiEvents()
     }
 
-    private fun updateUi(view: View) {
-        //fetch the weather Info from API and update UI
-        viewModel.fetchCityWeather(currentCity, view)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        activity = context as MainActivity
+    private fun observeUiEvents() {
+        viewModel.getRequestErrorDialog()
+            .observe { showErrorDialog(it) }
+        viewModel.getUpdateFieldsLiveData()
+            .observe { updateFields(it) }
     }
 
     @SuppressLint("SetTextI18n")
-    fun updateFields(currentCity: City, view: View) {
-        view.city_name.text = currentCity.name
-        view.humidity.text = currentCity.weather?.humidity
-        view.temprature.text = currentCity.weather?.currentTemp + "°C"
-        view.description.text = currentCity.weather?.description
+    private fun updateFields(currentCity: City) {
+        B.cityName.text = currentCity.name
+        B.humidity.text = currentCity.weather?.humidity
+        B.temprature.text = currentCity.weather?.currentTemp + "°C"
+        B.description.text = currentCity.weather?.description
     }
 
-    fun showErrorDialog(e: Throwable?) {
+    private fun showErrorDialog(message: String) {
         val alertDialog = AlertDialog.Builder(context).create()
-        alertDialog.setMessage(e?.message)
+        alertDialog.setMessage(message)
         alertDialog.setTitle(getString(R.string.we_face_with_an_error))
         alertDialog.setButton(
             AlertDialog.BUTTON_NEUTRAL, getString(R.string.ok)
         ) { _, _ ->
             alertDialog.dismiss()
-            activity.changeFragment(R.id.content_main, CityListFragment())
+            viewModel.errorDialogClosed()
         }
         alertDialog.show()
-    }
-
-    companion object {
-        private const val ARG_CITY_PARAM: String = "current_city"
-        fun newInstance(city: City): WeatherInfoFragment {
-            return WeatherInfoFragment().apply {
-                arguments = bundleOf(
-                    ARG_CITY_PARAM to city
-                )
-            }
-        }
     }
 
     override fun inflateViewBinding(
@@ -99,5 +76,16 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
         ViewModelProvider(this, WeatherInfoViewModel.Factory(apiRepository)).get(
             WeatherInfoViewModel::class.java
         )
+
+    companion object {
+        private const val ARG_CITY_PARAM: String = "current_city"
+        fun newInstance(city: City): WeatherInfoFragment {
+            return WeatherInfoFragment().apply {
+                arguments = bundleOf(
+                    ARG_CITY_PARAM to city
+                )
+            }
+        }
+    }
 
 }
