@@ -1,18 +1,10 @@
 package com.simplertutorials.android.wheathograophy.data.database
 
-import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import com.simplertutorials.android.wheathograophy.domain.City
 
-class StorageRepository @SuppressLint("CommitPrefEdits") private constructor(
-    private val settings: SharedPreferences,
-    key: String
-) {
-    private val editor: SharedPreferences.Editor = settings.edit()
-    private val manager: SharedPreferencesManager = SharedPreferencesManager(editor, settings)
-    private val KEY: String = key
+class StorageRepository(private val manager: SharedPreferencesManager, private val key: String) {
     val cityList: List<City>
-        get() = convertToCityObject(manager.readSet(KEY))
+        get() = convertToCityObject(manager.readSet(key))
 
     fun addCity(city: City) {
         val cityList = mutableListOf<City>()
@@ -33,8 +25,8 @@ class StorageRepository @SuppressLint("CommitPrefEdits") private constructor(
     }
 
     private fun rewriteSharedPreferences(cityList: List<City>) {
-        manager.deleteValue(KEY)
-        manager.writeSet(convertToHashSet(cityList), KEY)
+        manager.deleteValue(key)
+        manager.writeSet(convertToHashSet(cityList), key)
     }
 
     private fun convertToHashSet(cityList: List<City>): HashSet<String> {
@@ -55,13 +47,4 @@ class StorageRepository @SuppressLint("CommitPrefEdits") private constructor(
         }
         return cityList
     }
-
-    companion object {
-        private var instance: StorageRepository? = null
-        fun getInstance(settings: SharedPreferences, key: String): StorageRepository {
-            if (instance == null) instance = StorageRepository(settings, key)
-            return instance!!
-        }
-    }
-
 }
