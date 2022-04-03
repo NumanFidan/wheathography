@@ -8,4 +8,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="add_city">Add City</string>
+    <string name="temp_with_celsius">%1s°C</string>
+    <string name="temp_not_available">!!</string>
+    <string name="city_added">%1s added successfully</string>
 </resources>
