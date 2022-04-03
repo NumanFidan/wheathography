@@ -24,7 +24,7 @@ import javax.inject.Inject
 class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragmentBinding>() {
 
     @Inject
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
     private lateinit var currentCity: City
     private lateinit var activity: MainActivity
 
@@ -96,7 +96,7 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
     ): WeatherInfoFragmentBinding? = WeatherInfoFragmentBinding.inflate(inflater, container, false)
 
     override fun generateViewModel(): WeatherInfoViewModel =
-        ViewModelProvider(this, WeatherInfoViewModel.Factory(ApiRepository, apiService)).get(
+        ViewModelProvider(this, WeatherInfoViewModel.Factory(apiRepository)).get(
             WeatherInfoViewModel::class.java
         )
 

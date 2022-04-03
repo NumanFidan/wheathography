@@ -29,17 +29,16 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     OnCityClickListener {
 
     @Inject
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
 
     private var KEY: String = "Cities"
-    private val ARG_CITY_PARAM: String = "current_city"
 
+    private val ARG_CITY_PARAM: String = "current_city"
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
     private lateinit var activity: MainActivity
     private lateinit var databaseRepository: DatabaseRepository
-    private lateinit var apiRepository: ApiRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +49,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         cityList = ArrayList<City>()
         viewModel.getCurrentCityList(cityList)
 
-        apiRepository = ApiRepository
         (activity.applicationContext as MainApplication).component?.inject(this)
-
     }
 
     override fun onCreateView(
@@ -86,7 +83,7 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
 
         val layoutManager = LinearLayoutManager(context)
 
-        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository, apiService)
+        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository)
         view.city_list.apply {
             setHasFixedSize(true)
             adapter = recylclerViewAdapter
