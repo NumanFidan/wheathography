@@ -1,7 +1,6 @@
 package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,98 +14,93 @@ import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
-import com.simplertutorials.android.wheathograophy.ui.MainActivity
-import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment.WeatherInfoFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
-import kotlinx.android.synthetic.main.city_list_fragment.view.*
 import javax.inject.Inject
 
-class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>(),
-    OnCityClickListener {
+class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>() {
 
     @Inject
     lateinit var apiRepository: ApiRepository
 
     @Inject
     lateinit var storageRepository: StorageRepository
-
-    private var KEY: String = "Cities"
-    private val ARG_CITY_PARAM: String = "current_city"
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
-    private lateinit var cityList: ArrayList<City>
     private lateinit var recylclerViewAdapter: CityListAdapter
-    private lateinit var activity: MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (requireActivity().applicationContext as MainApplication).component?.inject(this)
         super.onCreate(savedInstanceState)
-        cityList = ArrayList<City>()
-        viewModel.getCurrentCityList(cityList)
-
-        (activity.applicationContext as MainApplication).component?.inject(this)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.city_list_fragment, container, false)
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         updateUi(view)
-        return view
+        observeUiEvents()
+        setOnclickListeners()
+    }
+
+    private fun observeUiEvents() {
+        viewModel.getRequestWeatherInfoFragment()
+            .observe { fragment ->
+                activityCallback.launchFragment(fragment)
+            }
+        viewModel.getRequestRefreshLiveData()
+            .observe {
+                swipeToRefreshLayout.isRefreshing = it
+            }
+        viewModel.getCityListLiveData()
+            .observe {
+                recylclerViewAdapter.setData(it)
+            }
+        viewModel.getRequestDeleteConfirmationDialogLiveData()
+            .observe {
+                showDeleteConfirmationDialog(it)
+            }
+    }
+
+    private fun setOnclickListeners() {
+        B.addCityBtn.setOnClickListener {
+            activityCallback.launchFragment(AddCityFragment())
+        }
     }
 
     private fun updateUi(view: View) {
-        view.add_city_btn.setOnClickListener {
-            activity.changeFragment(R.id.content_main, AddCityFragment())
-        }
-        setUpRecyclerView(view)
-        setUpSwipeToRefresh(view)
+        setUpRecyclerView()
+        setUpSwipeToRefresh()
     }
 
-    private fun setUpSwipeToRefresh(view: View) {
-        swipeToRefreshLayout = view.swipetorefresh_layout
+    private fun setUpSwipeToRefresh() {
+        swipeToRefreshLayout = B.swipetorefreshLayout
         swipeToRefreshLayout.setOnRefreshListener {
-            cityListRefresh()
+            viewModel.cityListRefresh()
             swipeToRefreshLayout.isRefreshing = false
         }
     }
 
-    private fun setUpRecyclerView(view: View) {
-
+    private fun setUpRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-
-        recylclerViewAdapter = CityListAdapter(cityList, this, apiRepository)
-        view.city_list.apply {
+        recylclerViewAdapter =
+            CityListAdapter(requireContext(), ::onCityClicked, ::onCityLongClicked)
+        B.cityList.apply {
             setHasFixedSize(true)
             adapter = recylclerViewAdapter
             this.layoutManager = layoutManager
         }
     }
 
-    private fun cityListRefresh() {
-        //get up to date list and notify the adapter about changes
-        viewModel.getCurrentCityList(cityList)
-        recylclerViewAdapter.notifyDataSetChanged()
+    private fun onCityClicked(city: City) {
+        viewModel.onCityClicked(city)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        this.activity = context as MainActivity
-    }
-
-    override fun onCityClicked(city: City) {
-        //Open the Info screen of the clicked City
-        //Pass the argument to the fragment
-        val fragment = WeatherInfoFragment.newInstance(city)
-        activity.changeFragment(R.id.content_main, fragment)
-    }
-
-    override fun onCityLongClicked(city: City) {
-        showDeleteConfirmationDialog(city)
+    private fun onCityLongClicked(city: City) {
+        viewModel.onCityLongClicked(city)
     }
 
     private fun showDeleteConfirmationDialog(city: City) {
@@ -114,9 +108,8 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         alertDialog.setMessage(getString(R.string.delete_the_city) + city.name)
         alertDialog.setTitle(getString(R.string.delete_city))
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.delete)) { _, _ ->
-            viewModel.deleteCity(city)
+            viewModel.deleteCityConfirmed(city)
             alertDialog.dismiss()
-            cityListRefresh()
         }
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { _, _ ->
             alertDialog.dismiss()
@@ -133,6 +126,6 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
     override fun generateViewModel(): CityListViewModel =
         ViewModelProvider(
             this,
-            CityListViewModel.Factory(storageRepository)
+            CityListViewModel.Factory(storageRepository, apiRepository)
         ).get(CityListViewModel::class.java)
 }

@@ -19,8 +19,8 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
     lateinit var storageRepositoryCities: StorageRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as MainApplication).component?.inject(this)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
