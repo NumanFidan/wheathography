@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
@@ -22,8 +23,11 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
     @Inject
     lateinit var storageRepositoryCities: StorageRepository
     private lateinit var activity: MainActivity
-    private var KEY: String = "Cities"
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity.applicationContext as MainApplication).component?.inject(this)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
