@@ -7,20 +7,14 @@ class StorageRepository(private val manager: SharedPreferencesManager, private v
         get() = convertToCityObject(manager.readSet(key))
 
     fun addCity(city: City) {
-        val cityList = mutableListOf<City>()
-        cityList.addAll(cityList)
         if (!cityList.contains(city)) {
-            cityList.add(city)
-            rewriteSharedPreferences(cityList)
+            rewriteSharedPreferences(cityList + listOf(city))
         }
     }
 
     fun deleteCity(city: City?) {
-        val cityList = mutableListOf<City>()
-        cityList.addAll(cityList)
         if (cityList.contains(city)) {
-            cityList.remove(city)
-            rewriteSharedPreferences(cityList)
+            rewriteSharedPreferences(cityList.filterNot { it == city })
         }
     }
 
