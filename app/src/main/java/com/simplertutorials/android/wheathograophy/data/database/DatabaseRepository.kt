@@ -9,7 +9,7 @@ class DatabaseRepository @SuppressLint("CommitPrefEdits") private constructor(
     key: String
 ) {
     private val editor: SharedPreferences.Editor = settings.edit()
-    private val manager: DatabaseManager = DatabaseManager(editor, settings)
+    private val manager: SharedPreferencesManager = SharedPreferencesManager(editor, settings)
     private val KEY: String = key
     val cityList: List<City>
         get() = convertToCityObject(manager.readSet(KEY))
