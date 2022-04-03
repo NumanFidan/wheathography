@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.R
@@ -19,7 +18,6 @@ import kotlinx.android.synthetic.main.city_add_fragment.view.*
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
-    private lateinit var _presenter: AddCityFragmentPresenter
     private lateinit var databaseRepositoryCities: DatabaseRepository
     private lateinit var activity: MainActivity
     private var KEY: String = "Cities"
@@ -29,7 +27,6 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
 
         val settings = requireContext().getSharedPreferences(KEY, 0)
         databaseRepositoryCities = DatabaseRepository.getInstance(settings, KEY)
-        _presenter = AddCityFragmentPresenter(databaseRepositoryCities, this)
     }
 
     override fun onCreateView(
@@ -46,7 +43,7 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
     private fun updateUi(view: View) {
         view.addcity_btn.setOnClickListener {
             val cityName = cityadd_text.text.toString()
-            _presenter.saveCity(cityName)
+            viewModel.saveCity(cityName)
         }
 
         view.cancel_btn.setOnClickListener {
