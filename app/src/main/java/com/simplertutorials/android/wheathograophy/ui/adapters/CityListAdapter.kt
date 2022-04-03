@@ -9,20 +9,23 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.domain.City
+import com.simplertutorials.android.wheathograophy.domain.Weather
 import kotlinx.android.synthetic.main.city_list_recyclerv_row.view.*
-import com.simplertutorials.android.wheathograophy.subscribe
 
 class CityListAdapter(
     context: Context,
-    private val cityListData: ArrayList<City>,
-    private val apiRepository: ApiRepository,
     private val onCityClicked: (City) -> Unit,
     private val onCityLongClicked: (City) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val layoutInflater = LayoutInflater.from(context)
+    private var cityListData: List<City> = emptyList()
+
+    fun setData(cityList: List<City>) {
+        this.cityListData = cityList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -48,7 +51,11 @@ class CityListAdapter(
 
         fun onBind(city: City) {
             cityName.text = city.name
-            hideCityTemp()
+            cityTemp.text = city.weather?.currentTemp?.let { "$it°C" } ?: "!"
+            when (city.weather?.weatherRequestState) {
+                Weather.RequestState.Loading -> hideCityTemp()
+                else -> hideProgressbar()
+            }
 
             rootLayout.setOnClickListener {
                 onCityClicked(city)
@@ -57,21 +64,6 @@ class CityListAdapter(
                 onCityLongClicked(city)
                 true
             }
-
-            //Get weather Info from API
-            //We need to do this here to create a partially loading effect with RecyclerView
-            apiRepository.getWeatherInfo(city)
-                .subscribe(
-                    onNext = { n ->
-                        cityTemp.text =
-                            String.format("%.2f", n.informationCube!!.temp - 273.15) + "°C"
-                        hideProgressbar()
-                    },
-                    onError = { e ->
-                        cityTemp.text = "!"
-                        hideProgressbar()
-                    })
-
         }
 
         private fun hideProgressbar() {
