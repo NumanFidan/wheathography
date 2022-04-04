@@ -12,6 +12,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(DebugLogTree())
+
         applicationComponent = DaggerApplicationComponent.builder()
             .contextModule(ContextModule(this))
             .build()

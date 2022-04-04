@@ -1,7 +1,5 @@
 package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
 
-import android.annotation.SuppressLint
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

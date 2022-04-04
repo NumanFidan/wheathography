@@ -2,9 +2,7 @@ package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFrag
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
-import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
-import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.databinding.WeatherInfoFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
-import com.simplertutorials.android.wheathograophy.ui.MainActivity
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
-import kotlinx.android.synthetic.main.weather_info_fragment.view.*
 import javax.inject.Inject
 
 class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragmentBinding>() {
@@ -89,5 +83,4 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
             }
         }
     }
-
 }
