@@ -1,32 +1,37 @@
 package com.simplertutorials.android.wheathograophy.ui.adapters
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
-import com.simplertutorials.android.wheathograophy.data.api.ApiService
 import com.simplertutorials.android.wheathograophy.domain.City
-import com.simplertutorials.android.wheathograophy.ui.customListeners.OnCityClickListener
+import com.simplertutorials.android.wheathograophy.domain.Weather
 import kotlinx.android.synthetic.main.city_list_recyclerv_row.view.*
 
+class CityListAdapter(
+    private val context: Context,
+    private val onCityClicked: (City) -> Unit,
+    private val onCityLongClicked: (City) -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class CityListAdapter(private val cityListData: ArrayList<City>,
-                      private val onCityClickListener: OnCityClickListener,
-                      private val apiRepository: ApiRepository,
-                      private val apiService: ApiService)
-    : RecyclerView.Adapter<CityListAdapter.CityListHolder>() {
+    private val layoutInflater = LayoutInflater.from(context)
+    private var cityListData: List<City> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): CityListHolder {
+    fun setData(cityList: List<City>) {
+        this.cityListData = cityList
+        notifyDataSetChanged()
+    }
 
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.city_list_recyclerv_row, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): RecyclerView.ViewHolder {
+        val view = layoutInflater.inflate(R.layout.city_list_recyclerv_row, parent, false)
         return CityListHolder(view)
     }
 
@@ -34,52 +39,45 @@ class CityListAdapter(private val cityListData: ArrayList<City>,
         return cityListData.size
     }
 
-    @SuppressLint("CheckResult", "SetTextI18n")
-    override fun onBindViewHolder(holder: CityListHolder, position: Int) {
-        val city = cityListData[position]
-        holder.cityName.text = city.name
-        hideCityTemp(holder)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as CityListHolder).onBind(cityListData[position])
+    }
 
-        holder.layout.setOnClickListener {
-            onCityClickListener.onCityClicked(city)
+    private inner class CityListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val loadingProgressBar = itemView.progressBar as ProgressBar
+        val cityName = itemView.row_cityname as TextView
+        val cityTemp = itemView.row_cityweather as TextView
+        val rootLayout = itemView
+
+        fun onBind(city: City) {
+            cityName.text = city.name
+            cityTemp.text =
+                city.weather?.currentTemp?.let { context.getString(R.string.temp_with_celsius, it) }
+                    ?: context.getString(R.string.temp_not_available)
+            when (city.weather?.weatherRequestState) {
+                Weather.RequestState.Loading -> hideCityTemp()
+                else -> hideProgressbar()
+            }
+
+            rootLayout.setOnClickListener {
+                onCityClicked(city)
+            }
+            rootLayout.setOnLongClickListener {
+                onCityLongClicked(city)
+                true
+            }
         }
 
-        holder.layout.setOnLongClickListener {
-            onCityClickListener.onCityLongClicked(city)
-            true
+        private fun hideProgressbar() {
+            //Hide ProgressBar and update the Temp field
+            cityTemp.isVisible = true
+            loadingProgressBar.isVisible = false
         }
 
-        //Get weather Info from API
-        //We need to do this here to create a partially loading effect with RecyclerView
-        apiRepository.getWeatherInfo(apiService, city)
-                .subscribe({ n ->
-                    holder.cityTemp.text = String.format("%.2f", n.informationCube!!.temp - 273.15) + "°C"
-                    hideProgressbar(holder)
-                },
-                        { e ->
-                            holder.cityTemp.text = "!"
-                            hideProgressbar(holder)
-                        })
+        private fun hideCityTemp() {
+            //Hide the Temp Field and show the ProgressBar
+            cityTemp.isVisible = false
+            loadingProgressBar.isVisible = true
+        }
     }
-
-    private fun hideProgressbar(holder: CityListHolder) {
-        //Hide ProgressBar and update the Temp field
-        holder.cityTemp.visibility = View.VISIBLE
-        holder.loading.visibility = View.GONE
-    }
-    private fun hideCityTemp(holder: CityListHolder) {
-        //Hide the Temp Field and show the ProgressBar
-        holder.cityTemp.visibility = View.GONE
-        holder.loading.visibility = View.VISIBLE
-    }
-
-    class CityListHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
-        val loading = view.progressBar as ProgressBar
-        val cityName = view.row_cityname as TextView
-        val cityTemp = view.row_cityweather as TextView
-        val layout = view
-    }
-
-
 }

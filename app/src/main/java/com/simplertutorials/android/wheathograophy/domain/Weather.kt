@@ -1,15 +1,16 @@
 package com.simplertutorials.android.wheathograophy.domain
 
-class Weather {
-    var currentTemp: String? = null
-    var humidity: String? = null
-    var description: String? = null
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-    constructor(currentTemp: String?, humidity: String?, description: String?) {
-        this.currentTemp = currentTemp
-        this.humidity = humidity
-        this.description = description
+@Parcelize
+data class Weather(
+    val currentTemp: String?,
+    val humidity: String?,
+    val description: String?,
+    val weatherRequestState: RequestState
+) : Parcelable {
+    enum class RequestState {
+        Loading, Success, Error, Initial
     }
-
-    constructor()
 }

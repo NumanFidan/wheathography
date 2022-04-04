@@ -8,15 +8,14 @@ Mistakes I made before and planning to change now:
 * not enough sperationo of concerns
 
 What I am planning to change
-* Refactor to Kotlin
-* maybe migrate to Hilt instead of Dagger??
-* Write unit test
-* migrate to MVVM architecture
-* use Bindings
-* Better UI
-* Animations??
-* improve seperation of concerns
-* 
+- [ ] Refactor to Kotlin
+- [ ] maybe migrate to Hilt instead of Dagger??
+- [ ] Write unit test
+- [ ] migrate to MVVM architecture
+- [ ] use Bindings
+- [ ] Better UI
+- [ ] Animations??
+- [ ] improve seperation of concerns 
 
 What this app have right now:
 * MVP architecture
