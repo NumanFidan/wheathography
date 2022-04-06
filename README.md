@@ -5,19 +5,25 @@ This project is under construction !!! I decided to refactor this project instea
 Mistakes I made before and planning to change now:
 * made too little commits
 * no unit tests
-* not enough sperationo of concerns
+* poor sperationo of concerns
 
 What I am planning to change
-- [ ] Refactor to Kotlin
+- [x] Refactor to Kotlin
 - [ ] maybe migrate to Hilt instead of Dagger??
 - [ ] Write unit test
-- [ ] migrate to MVVM architecture
-- [ ] use Bindings
+- [x] migrate to MVVM architecture
+- [x] use Bindings
 - [ ] Better UI
 - [ ] Animations??
-- [ ] improve seperation of concerns 
+- [x] improve seperation of concerns 
 
-What this app have right now:
+What this app had before right now:
+* MVVM architecture with LiveData
+* Dagger2
+* Retrofit for API calls
+
+
+What this app had before right now:
 * MVP architecture
 * Dagger2
 * Retrofit for API calls
