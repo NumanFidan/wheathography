@@ -10,7 +10,7 @@ With this project, I mainly focused on delivering a working and well-written pro
 
 
 Mistakes I made before and planning to change:
-* made too little commits
+* made too few commits
 * no unit tests
 * poor speration of concerns
 
@@ -18,6 +18,7 @@ What I am planning to change:
 - [ ] Document the code
 - [x] Refactor to Kotlin
 - [ ] maybe migrate to Hilt instead of Dagger??
+- [ ] JetPack ??
 - [ ] Write unit test
 - [x] migrate to MVVM architecture
 - [x] use Bindings
