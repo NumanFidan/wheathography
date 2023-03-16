@@ -13,6 +13,7 @@ Mistakes I made before and planning to change:
 * made too few commits
 * no unit tests
 * poor speration of concerns
+* poor documentation
 
 What I am planning to change:
 - [ ] Document the code
@@ -30,9 +31,3 @@ What this app has right now:
 * MVVM architecture with LiveData
 * Dagger2
 * Retrofit for API calls
-
-What this app had before:
-* MVP architecture
-* Dagger2
-* Retrofit for API calls
-* 
