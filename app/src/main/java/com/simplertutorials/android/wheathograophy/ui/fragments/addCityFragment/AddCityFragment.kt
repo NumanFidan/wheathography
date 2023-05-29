@@ -11,7 +11,6 @@ import com.simplertutorials.android.wheathograophy.data.database.StorageReposito
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
 import com.simplertutorials.android.wheathograophy.managers.ResourceManager
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import kotlinx.android.synthetic.main.city_add_fragment.*
 import javax.inject.Inject
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
@@ -46,7 +45,7 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
 
     private fun setUpUI() {
         B.addcityBtn.setOnClickListener {
-            val cityName = cityadd_text.text.toString()
+            val cityName = B.cityaddText.text.toString()
             viewModel.onAddCityClicked(cityName)
         }
         B.cancelBtn.setOnClickListener {
