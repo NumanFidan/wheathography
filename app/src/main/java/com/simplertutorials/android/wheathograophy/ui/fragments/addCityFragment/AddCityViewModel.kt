@@ -42,7 +42,7 @@ class AddCityViewModel(
         private val storageRepository: StorageRepository,
         private val resourceManager: ResourceManager
     ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return AddCityViewModel(storageRepository, resourceManager) as T
         }
     }
