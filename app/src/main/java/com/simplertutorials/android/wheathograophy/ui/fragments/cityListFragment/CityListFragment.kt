@@ -5,34 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
-import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>() {
 
-    @Inject
-    lateinit var apiRepository: ApiRepository
+    override val viewModel by viewModel<CityListViewModel>()
 
-    @Inject
-    lateinit var storageRepository: StorageRepository
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var recylclerViewAdapter: CityListAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        (requireActivity().applicationContext as MainApplication).component?.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onResume() {
         super.onResume()
@@ -122,10 +110,4 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         container: ViewGroup?
     ): CityListFragmentBinding? =
         CityListFragmentBinding.inflate(inflater, container, false)
-
-    override fun generateViewModel(): CityListViewModel =
-        ViewModelProvider(
-            this,
-            CityListViewModel.Factory(storageRepository, apiRepository)
-        ).get(CityListViewModel::class.java)
 }

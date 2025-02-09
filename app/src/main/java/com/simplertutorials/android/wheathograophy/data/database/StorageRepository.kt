@@ -2,7 +2,10 @@ package com.simplertutorials.android.wheathograophy.data.database
 
 import com.simplertutorials.android.wheathograophy.domain.City
 
-class StorageRepository(private val manager: SharedPreferencesManager, private val key: String) {
+class StorageRepository(
+    private val manager: SharedPreferencesManager,
+    private val key: String
+) {
     val cityList: List<City>
         get() = convertToCityObject(manager.readSet(key))
 

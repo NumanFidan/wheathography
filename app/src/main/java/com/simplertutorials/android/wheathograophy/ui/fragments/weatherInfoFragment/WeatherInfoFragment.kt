@@ -7,22 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
-import com.simplertutorials.android.wheathograophy.MainApplication
 import com.simplertutorials.android.wheathograophy.R
-import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.databinding.WeatherInfoFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragmentBinding>() {
 
-    @Inject
-    lateinit var apiRepository: ApiRepository
+    override val viewModel by viewModel<WeatherInfoViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (requireActivity().applicationContext as MainApplication).component?.inject(this)
         super.onCreate(savedInstanceState)
         val currentCity = requireArguments().get(ARG_CITY_PARAM) as City
         viewModel.passArguments(currentCity)
@@ -46,7 +41,7 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
     private fun updateFields(currentCity: City) {
         B.cityName.text = currentCity.name
         B.humidity.text = currentCity.weather?.humidity
-        B.temprature.text = getString(R.string.temp_with_celsius, currentCity.weather?.currentTemp )
+        B.temprature.text = getString(R.string.temp_with_celsius, currentCity.weather?.currentTemp)
         B.description.text = currentCity.weather?.description
     }
 
@@ -67,11 +62,6 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
         inflater: LayoutInflater,
         container: ViewGroup?
     ): WeatherInfoFragmentBinding? = WeatherInfoFragmentBinding.inflate(inflater, container, false)
-
-    override fun generateViewModel(): WeatherInfoViewModel =
-        ViewModelProvider(this, WeatherInfoViewModel.Factory(apiRepository)).get(
-            WeatherInfoViewModel::class.java
-        )
 
     companion object {
         private const val ARG_CITY_PARAM: String = "current_city"

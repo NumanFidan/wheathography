@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ApiRepository constructor(private val apiService: ApiService) {
+class ApiRepository(private val apiService: ApiService) {
 
     fun getWeatherInfo(city: City): Observable<ApiWeatherResponse> {
         return apiService.getWeather(

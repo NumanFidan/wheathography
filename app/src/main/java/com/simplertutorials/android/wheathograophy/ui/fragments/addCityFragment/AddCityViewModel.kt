@@ -2,8 +2,6 @@ package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.domain.City
@@ -36,14 +34,5 @@ class AddCityViewModel(
         storageRepository.addCity(city)
         requestSnackBarLiveData.value = resourceManager.getString(R.string.city_added, cityName)
         requestCityListFragment.value = CityListFragment()
-    }
-
-    class Factory(
-        private val storageRepository: StorageRepository,
-        private val resourceManager: ResourceManager
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return AddCityViewModel(storageRepository, resourceManager) as T
-        }
     }
 }
