@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
-import kotlinx.android.synthetic.main.city_list_recyclerv_row.view.*
 
 class CityListAdapter(
     private val context: Context,
@@ -44,9 +43,9 @@ class CityListAdapter(
     }
 
     private inner class CityListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val loadingProgressBar = itemView.progressBar as ProgressBar
-        val cityName = itemView.row_cityname as TextView
-        val cityTemp = itemView.row_cityweather as TextView
+        val loadingProgressBar = itemView.findViewById(R.id.progressBar) as ProgressBar
+        val cityName = itemView.findViewById(R.id.row_cityname) as TextView
+        val cityTemp = itemView.findViewById(R.id.row_cityweather) as TextView
         val rootLayout = itemView
 
         fun onBind(city: City) {
