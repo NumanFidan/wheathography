@@ -2,8 +2,6 @@ package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.domain.City
