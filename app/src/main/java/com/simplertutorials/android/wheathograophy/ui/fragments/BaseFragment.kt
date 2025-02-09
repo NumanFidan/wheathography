@@ -21,12 +21,11 @@ abstract class BaseFragment<VIEWMODEL : BaseViewModel, BINDING : ViewBinding> : 
     protected val activityCallback: ActivityCallback
         get() = _activityCallback!!
 
-    protected lateinit var viewModel: VIEWMODEL
+    abstract val viewModel: VIEWMODEL
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = generateViewModel()
     }
 
     @CallSuper
@@ -58,7 +57,6 @@ abstract class BaseFragment<VIEWMODEL : BaseViewModel, BINDING : ViewBinding> : 
     }
 
     abstract fun inflateViewBinding(inflater: LayoutInflater, container: ViewGroup?): BINDING?
-    abstract fun generateViewModel(): VIEWMODEL
 
     protected fun <T> LiveData<T>.observe(onNext: (T) -> Unit) {
         observe(viewLifecycleOwner) { onNext(it) }

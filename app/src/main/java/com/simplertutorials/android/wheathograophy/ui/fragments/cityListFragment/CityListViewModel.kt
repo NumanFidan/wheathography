@@ -92,13 +92,4 @@ class CityListViewModel(
     fun deleteCityConfirmed(city: City) {
         deleteCity(city)
     }
-
-    class Factory(
-        private val storageRepository: StorageRepository,
-        private val apiRepository: ApiRepository
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return CityListViewModel(storageRepository, apiRepository) as T
-        }
-    }
 }

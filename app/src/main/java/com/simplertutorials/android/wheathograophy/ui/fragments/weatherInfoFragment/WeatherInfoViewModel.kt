@@ -50,12 +50,4 @@ class WeatherInfoViewModel(
                     updateFieldsLiveData.value = updatedCity
                 })
     }
-
-    class Factory(
-        private val apiRepository: ApiRepository,
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return WeatherInfoViewModel(apiRepository) as T
-        }
-    }
 }

@@ -37,13 +37,4 @@ class AddCityViewModel(
         requestSnackBarLiveData.value = resourceManager.getString(R.string.city_added, cityName)
         requestCityListFragment.value = CityListFragment()
     }
-
-    class Factory(
-        private val storageRepository: StorageRepository,
-        private val resourceManager: ResourceManager
-    ) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return AddCityViewModel(storageRepository, resourceManager) as T
-        }
-    }
 }

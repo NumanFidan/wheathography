@@ -4,25 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import com.simplertutorials.android.wheathograophy.MainApplication
-import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
-import com.simplertutorials.android.wheathograophy.managers.ResourceManager
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {
 
-    @Inject
-    lateinit var storageRepositoryCities: StorageRepository
-
-    @Inject
-    lateinit var resourceManager: ResourceManager
+    override val viewModel by viewModel<AddCityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (requireActivity().applicationContext as MainApplication).component?.inject(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -58,12 +49,4 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
         container: ViewGroup?
     ): CityAddFragmentBinding? =
         CityAddFragmentBinding.inflate(inflater, container, false)
-
-    override fun generateViewModel(): AddCityViewModel =
-        ViewModelProvider(
-            this, AddCityViewModel.Factory(
-                storageRepositoryCities, resourceManager
-            )
-        ).get(AddCityViewModel::class.java)
-
 }
