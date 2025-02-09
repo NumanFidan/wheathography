@@ -88,6 +88,15 @@ dependencies {
 //
     implementation(libs.koin)
 
+    //Ktor
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.serialization.jvm)
+    implementation(libs.ktor.client.logging)
+
+    //Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation ("com.google.android.material:material:1.12.0")
 
