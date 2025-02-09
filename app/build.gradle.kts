@@ -86,12 +86,6 @@ dependencies {
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 //
-    //dagger2
-    implementation ("org.jetbrains:annotations:23.0.0")
-    implementation ("com.google.dagger:dagger-android:2.55")
-    implementation ("com.google.dagger:dagger-android-support:2.55")
-    annotationProcessor ("com.google.dagger:dagger-android-processor:2.55")
-    kapt ("com.google.dagger:dagger-compiler:2.55")
 
 
     //retrofit and Gson
