@@ -12,7 +12,7 @@ class ApiRepository constructor(private val apiService: ApiService) {
     fun getWeatherInfo(city: City): Observable<ApiWeatherResponse> {
         return apiService.getWeather(
             city.name,
-            BuildConfig.apiKey
+            BuildConfig.API_KEY
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
