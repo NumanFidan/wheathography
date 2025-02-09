@@ -86,6 +86,7 @@ dependencies {
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 //
+    implementation(libs.koin)
 
 
     //retrofit and Gson
