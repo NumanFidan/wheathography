@@ -1,17 +1,21 @@
 package com.simplertutorials.android.wheathograophy.domain
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ApiWeatherResponse(
-    @SerializedName("main") val informationCube: InformationCube,
-    @SerializedName("weather") val weather: List<WeatherResponse>
+    @SerialName("main") val informationCube: InformationCube,
+    @SerialName("weather") val weather: List<WeatherResponse>
 )
 
+@Serializable
 data class WeatherResponse(
-    @SerializedName("description") val description: String? = null
+    @SerialName("description") val description: String? = null
 )
 
+@Serializable
 data class InformationCube(
-    @SerializedName("temp") val temp: Float,
-    @SerializedName("humidity") val humidity: Float
+    @SerialName("temp") val temp: Float,
+    @SerialName("humidity") val humidity: Float
 )
