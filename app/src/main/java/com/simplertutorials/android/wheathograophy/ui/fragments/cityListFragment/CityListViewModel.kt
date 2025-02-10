@@ -2,13 +2,15 @@ package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragmen
 
 import androidx.lifecycle.*
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
+import com.simplertutorials.android.wheathograophy.data.api.util.onError
+import com.simplertutorials.android.wheathograophy.data.api.util.onSuccess
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.domain.ApiWeatherResponse
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
 import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment.WeatherInfoFragment
-import com.simplertutorials.android.wheathograophy.subscribe
+import kotlinx.coroutines.launch
 
 class CityListViewModel(
     private val storageRepository: StorageRepository,
@@ -40,21 +42,23 @@ class CityListViewModel(
             it.copy(weather = weather)
         }
         cityListLiveData.value = cityList
-        getCurrentCityList().forEach { city ->
-            apiRepository.getWeatherInfo(city)
-                .subscribe(
-                    onNext = { apiWeatherResponse ->
+        viewModelScope.launch {
+            getCurrentCityList().forEach { city ->
+                apiRepository.getWeatherInfo(city)
+                    .onSuccess {
                         requestRefreshLiveData.postValue(false)
-                        updateCityWeather(city, apiWeatherResponse, Weather.RequestState.Success)
+                        updateCityWeather(city, it, Weather.RequestState.Success)
                         cityListLiveData.postValue(cityList)
-                    },
-                    onError = { e ->
+                    }
+                    .onError {
                         requestRefreshLiveData.postValue(false)
                         updateCityWeather(city, null, Weather.RequestState.Error)
                         cityListLiveData.postValue(cityList)
-                    })
+                    }
+            }
         }
     }
+
     private fun getCurrentCityList(): List<City> {
         //get the up to date list from database
         return storageRepository.cityList

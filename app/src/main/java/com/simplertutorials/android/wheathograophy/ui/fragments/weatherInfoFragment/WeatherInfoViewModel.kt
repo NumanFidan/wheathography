@@ -2,14 +2,15 @@ package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFrag
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
+import com.simplertutorials.android.wheathograophy.data.api.util.onError
+import com.simplertutorials.android.wheathograophy.data.api.util.onSuccess
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
-import com.simplertutorials.android.wheathograophy.subscribe
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
 import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
+import kotlinx.coroutines.launch
 
 class WeatherInfoViewModel(
     private val apiRepository: ApiRepository
@@ -34,20 +35,31 @@ class WeatherInfoViewModel(
     private fun fetchCityWeather(currentCity: City) {
         //fetch the weather from the API and update the fields
         var weather: Weather? = null
-        apiRepository.getWeatherInfo(currentCity)
-            .subscribe(
-                onNext = { apiWeatherResponse ->
+        viewModelScope.launch {
+            apiRepository.getWeatherInfo(currentCity)
+                .onSuccess { apiWeatherResponse ->
                     weather = Weather(
-                        String.format("%.2f", apiWeatherResponse.informationCube.temp - 273.15),
-                        String.format("%.2f", apiWeatherResponse.informationCube.humidity),
-                        apiWeatherResponse.weather[0].description,
-                        Weather.RequestState.Success
+                        currentTemp = String.format(
+                            "%.2f",
+                            apiWeatherResponse.informationCube.temp - 273.15
+                        ),
+                        humidity = String.format(
+                            "%.2f",
+                            apiWeatherResponse.informationCube.humidity
+                        ),
+                        description = apiWeatherResponse.weather[0].description,
+                        weatherRequestState = Weather.RequestState.Success
                     )
-                },
-                onError = { e -> requestErrorDialog.value = e.message },
-                onComplete = {
                     val updatedCity = currentCity.copy(weather = weather)
                     updateFieldsLiveData.value = updatedCity
-                })
+                }
+                .onError {
+                    requestErrorDialog.value = it.name
+                }
+                .also {
+                    val updatedCity = currentCity.copy(weather = weather)
+                    updateFieldsLiveData.value = updatedCity
+                }
+        }
     }
 }
