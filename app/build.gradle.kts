@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     kotlin("kapt")
 }
 
@@ -89,10 +90,12 @@ dependencies {
     implementation(libs.koin)
 
     //Ktor
-    implementation(libs.ktor.client.android)
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.serialization.jvm)
+    implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+
 
     //Coroutines
     implementation(libs.kotlinx.coroutines.core)
