@@ -2,34 +2,52 @@ package com.simplertutorials.android.wheathograophy.koinComponents
 
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
 import com.simplertutorials.android.wheathograophy.data.api.ApiService
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.observer.ResponseObserver
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
+import io.ktor.http.ContentType.Application.Json
+import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 val apiModule = module {
-    var BASE_URL = "https://api.openweathermap.org/data/2.5/"
-
     single { ApiRepository(get()) }
 
-    single { get<Retrofit>().create(ApiService::class.java) }
+    single { ApiService(get()) }
 
     single {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(get<OkHttpClient>())
-            .build()
-    }
+        HttpClient {
+            install(ContentNegotiation) {
+                json(json = Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                }, contentType = ContentType.Any)
+            }
 
-    single { OkHttpClient.Builder().addInterceptor(get<HttpLoggingInterceptor>()).build() }
+            install(Logging) {
+                logger = object : io.ktor.client.plugins.logging.Logger {
+                    override fun log(message: String) {
+                        Timber.d(message)
+                    }
+                }
+                level = io.ktor.client.plugins.logging.LogLevel.ALL
+            }
 
-    single {
-        HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
+            install(ResponseObserver) {
+                onResponse { response ->
+                    Timber.d("HTTP status: ${response.status.value}")
+                }
+            }
+
+            install(DefaultRequest) {
+                header(HttpHeaders.ContentType, Json)
+            }
         }
     }
 }
