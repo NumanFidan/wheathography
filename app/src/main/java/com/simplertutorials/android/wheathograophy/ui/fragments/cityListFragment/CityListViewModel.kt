@@ -10,6 +10,8 @@ import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
 import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment.WeatherInfoFragment
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CityListViewModel(
@@ -18,13 +20,13 @@ class CityListViewModel(
 ) : BaseViewModel() {
 
     private var cityList = listOf<City>()
-    private val cityListLiveData: MutableLiveData<List<City>> = MutableLiveData()
-    private val requestRefreshLiveData = MutableLiveData(true)
+    private val cityListStateFlow: MutableStateFlow<List<City>> = MutableStateFlow(emptyList())
+    private val isRefreshingStateFlow = MutableStateFlow(true)
     private val requestDeleteConfirmationDialogLiveData: MutableLiveData<City> = MutableLiveData()
     private val requestWeatherInfoFragment: MutableLiveData<WeatherInfoFragment> = MutableLiveData()
 
-    fun getCityListLiveData(): LiveData<List<City>> = cityListLiveData
-    fun getRequestRefreshLiveData(): LiveData<Boolean> = requestRefreshLiveData
+    fun getCityListLiveData(): StateFlow<List<City>> = cityListStateFlow
+    fun getIsRefreshingStateFlow(): StateFlow<Boolean> = isRefreshingStateFlow
     fun getRequestWeatherInfoFragment(): LiveData<WeatherInfoFragment> = requestWeatherInfoFragment
 
     fun getRequestDeleteConfirmationDialogLiveData(): LiveData<City> =
@@ -35,25 +37,25 @@ class CityListViewModel(
     }
 
     fun cityListRefresh() {
-        requestRefreshLiveData.value = true
+        isRefreshingStateFlow.value = true
         cityList = getCurrentCityList().map {
             val weather = it.weather?.copy(weatherRequestState = Weather.RequestState.Loading)
                 ?: Weather(null, null, null, Weather.RequestState.Loading)
             it.copy(weather = weather)
         }
-        cityListLiveData.value = cityList
+        cityListStateFlow.value = cityList
         viewModelScope.launch {
             getCurrentCityList().forEach { city ->
                 apiRepository.getWeatherInfo(city)
                     .onSuccess {
-                        requestRefreshLiveData.postValue(false)
+                        isRefreshingStateFlow.value = false
                         updateCityWeather(city, it, Weather.RequestState.Success)
-                        cityListLiveData.postValue(cityList)
+                        cityListStateFlow.value = cityList
                     }
                     .onError {
-                        requestRefreshLiveData.postValue(false)
+                        isRefreshingStateFlow.value = false
                         updateCityWeather(city, null, Weather.RequestState.Error)
-                        cityListLiveData.postValue(cityList)
+                        cityListStateFlow.value = cityList
                     }
             }
         }
