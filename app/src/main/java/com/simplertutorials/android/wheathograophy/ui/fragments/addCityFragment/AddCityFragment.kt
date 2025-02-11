@@ -35,12 +35,11 @@ class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>()
     }
 
     private fun setUpUI() {
-        B.addcityBtn.setOnClickListener {
-            val cityName = B.cityaddText.text.toString()
-            viewModel.onAddCityClicked(cityName)
-        }
-        B.cancelBtn.setOnClickListener {
-            viewModel.onCancelClicked()
+        B.cityaddComposeview.setContent {
+            AddCityView(
+                viewModel::onAddCityClicked,
+                viewModel::onCancelClicked
+            )
         }
     }
 
