@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
-import com.simplertutorials.android.wheathograophy.ui.adapters.CityListAdapter
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -18,9 +15,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>() {
 
     override val viewModel by viewModel<CityListViewModel>()
-
-    private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
-    private lateinit var recylclerViewAdapter: CityListAdapter
 
     override fun onResume() {
         super.onResume()
@@ -31,7 +25,6 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
         super.onViewCreated(view, savedInstanceState)
         updateUi(view)
         observeUiEvents()
-        setOnclickListeners()
     }
 
     private fun observeUiEvents() {
@@ -39,52 +32,22 @@ class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding
             .observe { fragment ->
                 activityCallback.launchFragment(fragment)
             }
-        viewModel.getRequestRefreshLiveData()
-            .observe {
-                swipeToRefreshLayout.isRefreshing = it
-            }
-        viewModel.getCityListLiveData()
-            .observe {
-                recylclerViewAdapter.setData(it)
-            }
         viewModel.getRequestDeleteConfirmationDialogLiveData()
             .observe {
                 showDeleteConfirmationDialog(it)
             }
     }
 
-    private fun setOnclickListeners() {
-        B.addCityBtn.setOnClickListener {
-            activityCallback.launchFragment(AddCityFragment())
-        }
-    }
-
     private fun updateUi(view: View) {
-        setUpRecyclerView()
-        setUpSwipeToRefresh()
-    }
-
-    private fun setUpSwipeToRefresh() {
-        swipeToRefreshLayout = B.swipetorefreshLayout
-        swipeToRefreshLayout.setOnRefreshListener {
-            viewModel.cityListRefresh()
-            swipeToRefreshLayout.isRefreshing = false
+        B.composeView.setContent {
+            CityListView(
+                viewModel.getCityListLiveData(),
+                viewModel.getIsRefreshingStateFlow(),
+                viewModel::onCityClicked,
+                { activityCallback.launchFragment(AddCityFragment()) },
+                viewModel::cityListRefresh,
+            )
         }
-    }
-
-    private fun setUpRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        recylclerViewAdapter =
-            CityListAdapter(requireContext(), ::onCityClicked, ::onCityLongClicked)
-        B.cityList.apply {
-            setHasFixedSize(true)
-            adapter = recylclerViewAdapter
-            this.layoutManager = layoutManager
-        }
-    }
-
-    private fun onCityClicked(city: City) {
-        viewModel.onCityClicked(city)
     }
 
     private fun onCityLongClicked(city: City) {
