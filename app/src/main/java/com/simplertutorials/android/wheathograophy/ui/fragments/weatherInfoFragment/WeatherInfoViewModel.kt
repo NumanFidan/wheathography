@@ -1,5 +1,6 @@
 package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,8 @@ import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
 import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class WeatherInfoViewModel(
@@ -18,11 +21,11 @@ class WeatherInfoViewModel(
 
     private val requestErrorDialog: MutableLiveData<String> = MutableLiveData()
     private val requestCityListFragment: MutableLiveData<CityListFragment> = MutableLiveData()
-    private val updateFieldsLiveData: MutableLiveData<City> = MutableLiveData()
+    private val updateFieldsLiveData: MutableStateFlow<City> = MutableStateFlow(City("Default", null))
 
     fun getRequestErrorDialog(): LiveData<String> = requestErrorDialog
     fun getRequestCityListFragment(): LiveData<CityListFragment> = requestCityListFragment
-    fun getUpdateFieldsLiveData(): LiveData<City> = updateFieldsLiveData
+    fun getUpdateFieldsLiveData(): StateFlow<City> = updateFieldsLiveData
 
     fun passArguments(currentCity: City) {
         fetchCityWeather(currentCity)

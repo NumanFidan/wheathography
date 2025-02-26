@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.databinding.WeatherInfoFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragmentBinding>() {
 
@@ -26,23 +29,28 @@ class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragme
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeUiEvents()
+        updateUI()
+    }
+
+    private fun updateUI() {
+        B.composeView.setContent {
+            val city by viewModel.getUpdateFieldsLiveData().collectAsStateWithLifecycle(
+                City("Default", null)
+            )
+            WeatherInfoView(
+                cityName = city.name,
+                temperature = city.weather?.currentTemp,
+                humidity = city.weather?.humidity,
+                weatherDescription = city.weather?.description
+            )
+        }
     }
 
     private fun observeUiEvents() {
         viewModel.getRequestErrorDialog()
             .observe { showErrorDialog(it) }
-        viewModel.getUpdateFieldsLiveData()
-            .observe { updateFields(it) }
         viewModel.getRequestCityListFragment()
             .observe { activityCallback.launchFragment(it) }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun updateFields(currentCity: City) {
-        B.cityName.text = currentCity.name
-        B.humidity.text = currentCity.weather?.humidity
-        B.temprature.text = getString(R.string.temp_with_celsius, currentCity.weather?.currentTemp)
-        B.description.text = currentCity.weather?.description
     }
 
     private fun showErrorDialog(message: String) {
