@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.addCity
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
 import com.simplertutorials.android.wheathograophy.databinding.CityAddFragmentBinding
-import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddCityFragment : BaseFragment<AddCityViewModel, CityAddFragmentBinding>() {

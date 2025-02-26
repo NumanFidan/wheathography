@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.cityList
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.databinding.CityListFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
-import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
-import com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment.AddCityFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.BaseFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.addCity.AddCityFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CityListFragment : BaseFragment<CityListViewModel, CityListFragmentBinding>() {

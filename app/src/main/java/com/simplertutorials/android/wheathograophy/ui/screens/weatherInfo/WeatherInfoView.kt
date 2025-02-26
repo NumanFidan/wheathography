@@ -1,6 +1,5 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.weatherInfo
 
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

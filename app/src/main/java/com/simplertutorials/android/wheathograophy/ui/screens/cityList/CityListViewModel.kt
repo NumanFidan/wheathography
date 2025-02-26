@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.cityList
 
 import androidx.lifecycle.*
 import com.simplertutorials.android.wheathograophy.data.api.ApiRepository
@@ -8,8 +8,8 @@ import com.simplertutorials.android.wheathograophy.data.database.StorageReposito
 import com.simplertutorials.android.wheathograophy.domain.ApiWeatherResponse
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
-import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
-import com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment.WeatherInfoFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.BaseViewModel
+import com.simplertutorials.android.wheathograophy.ui.screens.weatherInfo.WeatherInfoFragment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

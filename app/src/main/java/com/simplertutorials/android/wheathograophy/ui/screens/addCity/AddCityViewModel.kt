@@ -1,4 +1,4 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.addCityFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.addCity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,8 +6,8 @@ import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.data.database.StorageRepository
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.managers.ResourceManager
-import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
-import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.BaseViewModel
+import com.simplertutorials.android.wheathograophy.ui.screens.cityList.CityListFragment
 
 class AddCityViewModel(
     private val storageRepository: StorageRepository,

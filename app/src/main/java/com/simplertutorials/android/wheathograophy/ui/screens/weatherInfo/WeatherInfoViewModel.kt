@@ -1,6 +1,5 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.weatherInfo
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,8 +8,8 @@ import com.simplertutorials.android.wheathograophy.data.api.util.onError
 import com.simplertutorials.android.wheathograophy.data.api.util.onSuccess
 import com.simplertutorials.android.wheathograophy.domain.City
 import com.simplertutorials.android.wheathograophy.domain.Weather
-import com.simplertutorials.android.wheathograophy.ui.fragments.BaseViewModel
-import com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment.CityListFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.BaseViewModel
+import com.simplertutorials.android.wheathograophy.ui.screens.cityList.CityListFragment
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

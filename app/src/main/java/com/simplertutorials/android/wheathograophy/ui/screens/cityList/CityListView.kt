@@ -1,6 +1,5 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.cityListFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.cityList
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.domain.City

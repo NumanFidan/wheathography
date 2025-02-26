@@ -1,6 +1,5 @@
-package com.simplertutorials.android.wheathograophy.ui.fragments.weatherInfoFragment
+package com.simplertutorials.android.wheathograophy.ui.screens.weatherInfo
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +10,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.simplertutorials.android.wheathograophy.R
 import com.simplertutorials.android.wheathograophy.databinding.WeatherInfoFragmentBinding
 import com.simplertutorials.android.wheathograophy.domain.City
-import com.simplertutorials.android.wheathograophy.ui.fragments.BaseFragment
+import com.simplertutorials.android.wheathograophy.ui.screens.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 class WeatherInfoFragment : BaseFragment<WeatherInfoViewModel, WeatherInfoFragmentBinding>() {
 
